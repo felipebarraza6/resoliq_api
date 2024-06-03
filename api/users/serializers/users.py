@@ -3,29 +3,26 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.validators import UniqueValidator
 
-# Django 
+# Django
 from django.contrib.auth import password_validation, authenticate
 from django.core.validators import RegexValidator
 
 # Models
-from api.users.models import User, Profile 
+from api.users.models import User
 
-
-class ProfileModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = '__all__'
-        
 
 class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
 
+
 class UserResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id','username', 'email','first_name', 'last_name', 'dni', 'phone_number', 'type_user')
+        fields = ('id', 'username', 'email', 'first_name',
+                  'last_name', 'dni', 'phone_number', 'type_user')
+
 
 class ResetPasswordSerializer(serializers.Serializer):
     user = serializers.EmailField()
@@ -38,7 +35,7 @@ class ResetPasswordSerializer(serializers.Serializer):
             data_phone_number = get_user.phone_number
             data_email = get_user.email
         except:
-             raise serializers.ValidationError('El usuario no existe!')
+            raise serializers.ValidationError('El usuario no existe!')
         get_user.set_password(data['new_password'])
         get_user.save()
 
@@ -55,10 +52,10 @@ class UserLoginSerializer(serializers.Serializer):
         if not user:
             raise serializers.ValidationError('Credenciales Invalidas')
         if not user.is_verified:
-            raise serializers.ValidationError('Cuenta de usuario aun no verificada')
+            raise serializers.ValidationError(
+                'Cuenta de usuario aun no verificada')
         self.context['user'] = user
         return data
-       
 
     def create(self, data):
         token, created = Token.objects.get_or_create(user=self.context['user'])
@@ -76,28 +73,27 @@ class UserSignUpSerializer(serializers.Serializer):
     last_name = serializers.CharField(max_length=500)
 
     username = serializers.CharField(
-		min_length=4,
-		max_length=20,
-		validators=[UniqueValidator(queryset=User.objects.all())]
-	)
+        min_length=4,
+        max_length=20,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
 
     dni = serializers.CharField(
         max_length=13,
-		validators=[UniqueValidator(queryset=User.objects.all())]
+        validators=[UniqueValidator(queryset=User.objects.all())]
     )
 
     phone_number = serializers.CharField(
         max_length=13,
-		validators=[UniqueValidator(queryset=User.objects.all())]
+        validators=[UniqueValidator(queryset=User.objects.all())]
     )
 
     type_user = serializers.CharField(max_length=3)
 
     password = serializers.CharField(min_length=8, max_length=64)
     password_confirmation = serializers.CharField(min_length=8, max_length=64)
-    
-    
-    def validate(self,data):
+
+    def validate(self, data):
         passwd = data['password']
         passwd_conf = data['password_confirmation']
         if passwd != passwd_conf:
@@ -108,5 +104,4 @@ class UserSignUpSerializer(serializers.Serializer):
     def create(self, data):
         data.pop('password_confirmation')
         user = User.objects.create_user(**data, is_active=True)
-        Profile.objects.create(user=user)
-        return data 
+        return data

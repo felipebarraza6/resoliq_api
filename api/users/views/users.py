@@ -20,10 +20,8 @@ from rest_framework.permissions import (
 
 # Models
 from api.users.models import User
-from api.transports.models import Student, Location
 # Serializers
 from api.users.serializers import ResetPasswordSerializer, UserResponseSerializer, UserLoginSerializer, UserModelSerializer, UserSignUpSerializer
-from api.transports.serializers import LocationModelSerializer, StudentModelSerializer
 
 
 class UserViewSet(mixins.RetrieveModelMixin,
@@ -94,29 +92,8 @@ class UserViewSet(mixins.RetrieveModelMixin,
     def retrieve(self, request, *args, **kwargs):
         """Add extra data to the response."""
         response = super(UserViewSet, self).retrieve(request, *args, **kwargs)
-
-        data_user_type = {}
-
-        if (response.data['type_user'] == 'GUA'):
-            data_students = []
-            data_location = []
-            students = Student.objects.filter(guardian=response.data['id'])
-            serializer = StudentModelSerializer(students, many=True)
-            if serializer.data:
-                data_students = serializer.data
-                id_driver = serializer.data[0]['grade']['driver']['id']
-                location = Location.objects.filter(driver=id_driver).first()
-                serializer2 = LocationModelSerializer(location, many=False)
-                data_location = serializer2.data
-
-            data_user_type = {
-                'students': data_students,
-                'location': data_location
-            }
-
         data = {
             'user': response.data,
-            'profile_data': data_user_type
         }
 
         response.data = data
