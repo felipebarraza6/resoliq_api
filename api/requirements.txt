@@ -1,0 +1,9 @@
+django
+djangorestframework
+psycopg2-binary
+gunicorn
+Pillow
+django-cors-headers
+django-filter
+requests
+django-import-export
