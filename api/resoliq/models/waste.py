@@ -1,7 +1,7 @@
 """Waste."""
 from django.db import models
 from api.utils.models import ModelApi
-from api.resoliq.models import Client, Driver
+from api.users.models import User
 
 
 class Residue(ModelApi):
@@ -16,9 +16,10 @@ class Residue(ModelApi):
 
 class RegisterResidue(ModelApi):
     """Register Residue Model."""
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
     residue = models.ForeignKey(Residue, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return str(self.residue)

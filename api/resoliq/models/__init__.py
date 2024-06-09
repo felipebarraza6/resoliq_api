@@ -1,4 +1,4 @@
-from .drivers import *
-from .waste import *
-from .clients import *
-from .orders import *
+from .drivers import Driver
+from .waste import Residue, RegisterResidue
+from .clients import Client
+from .orders import Order

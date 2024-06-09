@@ -1,5 +1,5 @@
-from .colleges import CollegeModelSerializer
-from .grades import GradeModelSerializer
-from .students import StudentModelSerializerCreate, StudentModelSerializer
-from .locations import LocationModelSerializer
-from .assits import AssistsModelSerializer, AssistsModelSerializerCreate
+"""Import Serializers."""
+from .waste import ResidueSerializer, RegisterResidueSerializer, ResidueListSerializer
+from .clients import ClientSerializer
+from .drivers import DriverSerializer
+from .orders import OrderSerializer, OrderRetrieveSerializer

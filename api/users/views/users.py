@@ -26,6 +26,7 @@ from api.users.serializers import ResetPasswordSerializer, UserResponseSerialize
 
 class UserViewSet(mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,
+                  mixins.CreateModelMixin,
                   mixins.ListModelMixin,
                   mixins.DestroyModelMixin,
                   viewsets.GenericViewSet,):

@@ -7,23 +7,23 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 # Views
-from api.resoliq.views import (colleges as views_colleges,
-                               grades as views_grades,
-                               students as views_students,
-                               locations as views_locations,
-                               assits as views_assits,)
+from api.resoliq.views import (clients as views_clients,
+                               drivers as views_drivers,
+                               orders as views_orders,
+                               waste as views_waste,)
 
 router = DefaultRouter()
 
 # Actions
-router.register(r'colleges', views_colleges.CollegeViewSet,
-                basename='colleges')
-router.register(r'grades', views_grades.GradeViewSet, basename='grades')
-router.register(r'students', views_students.StudentViewSet,
-                basename='students')
-router.register(r'locations', views_locations.LocationViewSet,
-                basename='locations')
-router.register(r'assits', views_assits.AssistsViewSet, basename='assits')
+router.register(r'clients', views_clients.ClientViewSet,
+                basename='clients')
+router.register(r'drivers', views_drivers.DriverViewSet, basename='drivers')
+router.register(r'orders', views_orders.OrderViewSet,
+                basename='orders')
+router.register(r'residues', views_waste.ResidueViewSet,
+                basename='residues')
+router.register(r'register-residues', views_waste.RegisterResidueViewSet,
+                basename='register-residues')
 
 urlpatterns = [
     path('', include(router.urls))
