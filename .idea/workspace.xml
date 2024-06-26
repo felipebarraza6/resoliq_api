@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="41aeaa25-41a3-456e-a248-6aa1a3cc97d1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/agro_sales_api.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/agro_sales_ui/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/agro_sales_ui/.idea/agro_sales_ui.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/agro_sales_ui/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/agro_sales_ui/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/apps.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/migrations/0002_registerresidue_user.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/migrations/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/models/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/models/clients.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/models/drivers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/models/orders.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/models/waste.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/router.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/serializers/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/serializers/clients.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/serializers/drivers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/serializers/orders.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/serializers/waste.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/tests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/views/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/views/clients.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/views/drivers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/views/orders.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/resoliq/views/waste.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.yml" beforeDir="false" afterPath="$PROJECT_DIR$/local.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/conf/nginx-react.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/public/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/public/logo192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/public/logo512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/public/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/public/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/App.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/api/config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/api/endpoints.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/assets/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/assets/img/logo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/assets/img/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/assets/img/sercologo.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/assets/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/assets/reporte.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/components/clients/CreateUpdate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/components/clients/List.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/components/drivers/CreateUpdate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/components/drivers/List.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/components/orders/CreateUpdate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/components/orders/List.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/components/residues/CreateUpdate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/components/residues/List.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/components/users/CreateUpdate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/components/users/List.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/containers/Clients.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/containers/DriversTrucks.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/containers/Home.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/containers/Login.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/containers/Orders.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/containers/Users.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/containers/Waste.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/pwa/reportWebVitals.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/reducers/appReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/reducers/clientsReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/reducers/driversReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/reducers/ordersReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/reducers/usersReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/reducers/wasteReducer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/tests/App.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/src/tests/setupTests.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resoliq_ui/yarn.lock" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2iP20zt7dgGpH5LwhFsczhCQsDm" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.admin.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/felipebarraza/projects_p/agro_sales_api",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "swagger",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.18034.82" />
+        <option value="bundled-python-sdk-975db3bf15a3-2767605e8bc2-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.18034.82" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="41aeaa25-41a3-456e-a248-6aa1a3cc97d1" name="Changes" comment="" />
+      <created>1719377677740</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1719377677740</updated>
+      <workItem from="1719377679288" duration="254000" />
+      <workItem from="1719377955608" duration="1722000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/agro_sales_api$admin.coverage" NAME="admin Coverage Results" MODIFIED="1719378649417" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/api/agro_sales" />
+  </component>
+</project>
