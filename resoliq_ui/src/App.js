@@ -5,7 +5,6 @@ import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import Login from "./containers/Login";
 import Home from "./containers/Home";
 import { appReducer } from "./reducers/appReducer";
-import api from "./api/endpoints";
 export const AppContext = createContext();
 
 function App() {

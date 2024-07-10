@@ -1,5 +1,13 @@
 import React, { useContext, useEffect } from "react";
-import { Table, Button, Row, Col, Popconfirm, notification } from "antd";
+import {
+  Table,
+  Button,
+  Row,
+  Col,
+  Popconfirm,
+  notification,
+  Descriptions,
+} from "antd";
 import api from "../../api/endpoints";
 import { ClientsContext } from "../../containers/Clients";
 import {
@@ -8,7 +16,6 @@ import {
   FileExcelFilled,
 } from "@ant-design/icons";
 import * as XLSX from "xlsx";
-import { render } from "@testing-library/react";
 
 const List = () => {
   const { state, dispatch } = useContext(ClientsContext);
@@ -138,44 +145,27 @@ const List = () => {
 
   const columns = [
     {
-      width: "30%",
+      width: "25%",
       title: "Nombre",
-      render: (x) => <>{x.name}<br/>{x.dni}</>,
-    },
-    { 
-      title: `Datos`,  
       render: (x) => (
-        <Row>
-          {x.email && (
-            <Col span={10}>
-              Email: <br/>
-              {x.email}
-            </Col>
-          )}
-          {x.phone_number && <Col span={6} >
-            Telefono: <br/>
-            {x.phone_number}
-          </Col>}
-          {x.commune && <Col span={21} >  
-            Dirección: <br/>
-            {x.commune}, {x.address}
-          </Col>}
-          {x.contact_name && <Col span={10} >
-            Nombre contacto: <br/>
-            {x.contact_name}
-          </Col>}
-          {x.executive && <Col span={10} >
-            Ejecutivo: <br/>
-            {x.executive}
-          </Col>}
-        </Row>
+        <>
+          {x.name}
+          <br />
+          {x.dni}
+        </>
       ),
     },
     {
-      width: "10%",
+      width: "40%",
+      title: `Email`,
+      dataIndex: `email`,
+      render: (email) => (email ? email : "Sin información"),
+    },
+    {
+      width: "26%",
       render: (x) => (
         <Row justify={"space-between"}>
-          <Col span={24} style={{marginBottom:"7px"}}>
+          <Col style={{ marginBottom: "7px" }}>
             <Popconfirm
               title={"Estas seguro de eliminar el residuo?"}
               onConfirm={() => deleteCliennt(x)}
@@ -191,7 +181,7 @@ const List = () => {
               </Button>{" "}
             </Popconfirm>
           </Col>
-          <Col span={24}>
+          <Col>
             <Button
               size="small"
               type="primary"
@@ -213,6 +203,27 @@ const List = () => {
   return (
     <Table
       dataSource={state.list.results}
+      expandedRowRender={(record) => (
+        <Descriptions bordered size="small" layout="vertical">
+          <Descriptions.Item label="Email">
+            {record.email ? record.email : "Sin información"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Teléfono">
+            {record.phone_number ? `${record.phone_number}` : "Sin información"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Dirección">
+            {record.commune
+              ? `${record.commune} ${record.address}`
+              : "Sin información"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Nombre contacto">
+            {record.contact_name ? `${record.contact_name}` : "Sin información"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Ejecutivo">
+            {record.executive ? `${record.executive}` : "Sin información"}
+          </Descriptions.Item>
+        </Descriptions>
+      )}
       size="small"
       title={() => (
         <Row justify={"space-between"}>

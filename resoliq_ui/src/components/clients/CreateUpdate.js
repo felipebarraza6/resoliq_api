@@ -1,5 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Card, Form, Input, Button, Modal, notification, Tag, Select } from "antd";
+import {
+  Card,
+  Form,
+  Input,
+  Button,
+  Modal,
+  notification,
+  Tag,
+  Select,
+} from "antd";
 import { ClientsContext } from "../../containers/Clients";
 import {
   PlusCircleFilled,
@@ -8,7 +17,7 @@ import {
   MinusCircleFilled,
 } from "@ant-design/icons";
 import api from "../../api/endpoints";
-import regions from "./regions.json"
+import regions from "./regions.json";
 
 const CreateUpdate = () => {
   const { state, dispatch } = useContext(ClientsContext);
@@ -98,13 +107,7 @@ const CreateUpdate = () => {
     <Card
       hoverable
       title={
-        state.select_to_edit ? (
-          <>
-           Actualizar cliente 
-          </>
-        ) : (
-          "Crear nuevo cliente"
-        )
+        state.select_to_edit ? <>Actualizar cliente</> : "Crear nuevo cliente"
       }
     >
       <Form
@@ -121,64 +124,45 @@ const CreateUpdate = () => {
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          label="Rut"
-          name="dni"
-          rules={[{ required: true, message: "Ingresa el rut" }]}
-        >
+        <Form.Item label="Rut" name="dni">
           <Input />
         </Form.Item>
 
-        <Form.Item
-          label="Telefono"
-          name="phone_number"
-          rules={[{ required: true, message: "Ingresa el telefono" }]}
-        >
+        <Form.Item label="Telefono" name="phone_number">
           <Input />
         </Form.Item>
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ type:"email", required: true, message: "Ingresa el email" }]}
-        >
+        <Form.Item label="Email" name="email">
           <Input />
         </Form.Item>
-        <Form.Item label={"Región"} name={"region"} >
-          <Select placeholder={"Selecciona una región"} onSelect={(key)=> {
-              const region = regions.find((region) => region.name === key)
-              setCommunes(region.communes)
-          }}>
-            {regions.map((region) =><Select.Option key={region.name} value={region.name}>{region.name}</Select.Option>)}
+        <Form.Item label={"Región"} name={"region"}>
+          <Select
+            placeholder={"Selecciona una región"}
+            onSelect={(key) => {
+              const region = regions.find((region) => region.name === key);
+              setCommunes(region.communes);
+            }}
+          >
+            {regions.map((region) => (
+              <Select.Option key={region.name} value={region.name}>
+                {region.name}
+              </Select.Option>
+            ))}
           </Select>
         </Form.Item>
-        <Form.Item
-          label="Comuna"
-          name="commune"
-          rules={[{ required:true, message:"Selcciona una región"}]}
-        >
-            <Select placeholder={"Seleciona una comuna"}>
-              {communes.map((commune) => <Select.Option key={commune}>{commune}</Select.Option>)}
-            </Select>
-         
+        <Form.Item label="Comuna" name="commune">
+          <Select placeholder={"Seleciona una comuna"}>
+            {communes.map((commune) => (
+              <Select.Option key={commune}>{commune}</Select.Option>
+            ))}
+          </Select>
         </Form.Item>
-        <Form.Item
-          label="Direccion"
-          name="address"
-          rules={[{  required: true, message: "Ingresa el email" }]}
-        >
+        <Form.Item label="Direccion" name="address">
           <Input.TextArea />
         </Form.Item>
-        <Form.Item
-          label="Nombre contacto"
-          name="contact_name"
-        >
+        <Form.Item label="Nombre contacto" name="contact_name">
           <Input />
         </Form.Item>
-        <Form.Item
-          label="Ejecutivo"
-          name="executive"
-          
-        >
+        <Form.Item label="Ejecutivo" name="executive">
           <Input />
         </Form.Item>
 

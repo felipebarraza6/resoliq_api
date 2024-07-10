@@ -76,8 +76,8 @@ export const delete_driver = async (id) => {
   return response;
 };
 
-export const list_clients = async () => {
-  const response = await GET("clients/");
+export const list_clients = async (page) => {
+  const response = await GET(`clients/?page=${page}`);
   return response.data;
 };
 
