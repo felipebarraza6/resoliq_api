@@ -8,6 +8,7 @@ import {
   FileExcelFilled,
 } from "@ant-design/icons";
 import * as XLSX from "xlsx";
+import { render } from "@testing-library/react";
 
 const List = () => {
   const { state, dispatch } = useContext(ClientsContext);
@@ -70,6 +71,10 @@ const List = () => {
       Rut: item.dni,
       Telefono: item.phone_number,
       Email: item.address,
+      Comuna: item.commune,
+      Direccion: item.address,
+      "Nombre Contacto": item.contact_name,
+      Ejecutivo: item.executive,
     }));
 
     // Crear el archivo Excel y descargarlo
@@ -133,17 +138,26 @@ const List = () => {
 
   const columns = [
     {
+
+      width: "30%",
       title: "Nombre",
-      dataIndex: "name",
+      render: (x) => <>{x.name}<br/>{x.dni}
+      </>,
     },
-    { title: `Rut`, dataIndex: `dni` },
-    { title: `Telefono`, dataIndex: `phone_number` },
-    { title: `Email`, dataIndex: `address` },
+    { title: `Datos`,  render: (x) => <Row>
+      <Col span={12} style={{borderLeft:"1px solid black",borderTop:"1px solid black", padding:"2px"}}>{x.email}</Col>
+        <Col span={12} style={{borderLeft:"1px solid black",borderRight:"1px solid black", borderTop:"1px solid black", padding:"2px"}}>{x.phone_number}</Col>
+        <Col span={24} style={{borderTop:"1px solid black", borderLeft:"1px solid black", borderRight:"1px solid black", padding:"2px"}}>{x.commune}, {x.address}</Col>
+        <Col span={12} style={{borderTop:"1px solid black", borderLeft:"1px solid black", borderBottom:"1px solid black",padding:"2px"}}>{x.contact_name}</Col>
+        <Col span={12} style={{border:"1px solid black", padding:"2px"}}>{x.executive}</Col>
+
+      
+    </Row>},
     {
-      width: "35%",
+      width: "10%",
       render: (x) => (
         <Row justify={"space-between"}>
-          <Col span={12}>
+          <Col span={24} style={{marginBottom:"7px"}}>
             <Popconfirm
               title={"Estas seguro de eliminar el residuo?"}
               onConfirm={() => deleteCliennt(x)}
@@ -159,7 +173,7 @@ const List = () => {
               </Button>{" "}
             </Popconfirm>
           </Col>
-          <Col span={12}>
+          <Col span={24}>
             <Button
               size="small"
               type="primary"
@@ -185,7 +199,7 @@ const List = () => {
       title={() => (
         <Row justify={"space-between"}>
           <Col>
-            <b>Residuos registrados: {state.list.count}</b>
+            <b>Clientes registrados: {state.list.count}</b>
           </Col>
           <Col>
             <Button

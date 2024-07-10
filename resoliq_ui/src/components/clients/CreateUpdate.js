@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { Card, Form, Input, Button, Modal, notification, Tag } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { Card, Form, Input, Button, Modal, notification, Tag, Select } from "antd";
 import { ClientsContext } from "../../containers/Clients";
 import {
   PlusCircleFilled,
@@ -8,9 +8,11 @@ import {
   MinusCircleFilled,
 } from "@ant-design/icons";
 import api from "../../api/endpoints";
+import regions from "./regions.json"
 
 const CreateUpdate = () => {
   const { state, dispatch } = useContext(ClientsContext);
+  const [communes, setCommunes] = useState([]);
   const [form] = Form.useForm();
 
   function createOrClear() {
@@ -98,7 +100,7 @@ const CreateUpdate = () => {
       title={
         state.select_to_edit ? (
           <>
-            <Tag color="blue">{state.select_to_edit.name}</Tag>
+           Actualizar cliente 
           </>
         ) : (
           "Crear nuevo cliente"
@@ -108,7 +110,7 @@ const CreateUpdate = () => {
       <Form
         form={form}
         layout="horizontal"
-        labelCol={{ span: 8 }}
+        labelCol={{ span: 7 }}
         labelWrap={true}
         onFinish={createOrUpdateClient}
       >
@@ -136,8 +138,46 @@ const CreateUpdate = () => {
         </Form.Item>
         <Form.Item
           label="Email"
+          name="email"
+          rules={[{ type:"email", required: true, message: "Ingresa el email" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item label={"Región"} name={"region"} rules={[{ required:true, message:"Selcciona una región"}]}>
+          <Select placeholder={"Selecciona una región"} onSelect={(key)=> {
+              const region = regions.find((region) => region.name === key)
+              setCommunes(region.communes)
+          }}>
+            {regions.map((region) =><Select.Option key={region.name} value={region.name}>{region.name}</Select.Option>)}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label="Comuna"
+          name="commune"
+          rules={[{ required:true, message:"Selcciona una región"}]}
+        >
+            <Select placeholder={"Seleciona una comuna"}>
+              {communes.map((commune) => <Select.Option key={commune}>{commune}</Select.Option>)}
+            </Select>
+         
+        </Form.Item>
+        <Form.Item
+          label="Direccion"
           name="address"
-          rules={[{ required: true, message: "Ingresa el email" }]}
+          rules={[{  required: true, message: "Ingresa el email" }]}
+        >
+          <Input.TextArea />
+        </Form.Item>
+        <Form.Item
+          label="Nombre contacto"
+          name="contact_name"
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Ejecutivo"
+          name="executive"
+          
         >
           <Input />
         </Form.Item>

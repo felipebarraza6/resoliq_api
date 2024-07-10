@@ -33,7 +33,7 @@ const Waste = () => {
         <Col span={8}>
           <CreateUpdate />
         </Col>
-        <Col span={13}>
+        <Col span={15}>
           <List />
         </Col>
       </Row>

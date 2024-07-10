@@ -30,8 +30,8 @@ const Clients = () => {
           </Tag>
         </Col>
       </Row>
-      <Row align={`middle`} justify={`space-around`}>
-        <Col span={14}>
+      <Row align={`top`} justify={`space-around`}>
+        <Col span={15}>
           <List />
         </Col>
         <Col span={8}>
