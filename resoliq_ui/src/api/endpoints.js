@@ -41,8 +41,8 @@ export const create_residue = async (data) => {
   return response;
 };
 
-export const list_residues = async () => {
-  const response = await GET("residues/");
+export const list_residues = async (page) => {
+  const response = await GET(`residues/?page=${page}`);
   return response.data;
 };
 

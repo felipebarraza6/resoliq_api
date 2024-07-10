@@ -350,7 +350,6 @@ const List = () => {
       x.vehicle_plate,
       x.phone_number,
     ]);
-    console.log(tableDriver);
 
     doc.setFontSize(14);
     doc.text(`Cliente`, 15, 50);
@@ -361,22 +360,26 @@ const List = () => {
       startY: 55,
     });
 
+    doc.setFontSize(12);
+    doc.text(`Observación`, 15, 80);
+    doc.text(`${order.observation}`, 18, 87);
+
     doc.setFontSize(14);
-    doc.text(`Conductor`, 15, 85);
+    doc.text(`Conductor`, 15, 115);
     doc.autoTable({
       title: "Conductor",
       head: [["Nombre", "Rut", "Patente", "Telefono"]],
       body: tableDriver,
-      startY: 90,
+      startY: 120,
     });
 
     doc.setFontSize(14);
-    doc.text(`Listado de residuos`, 15, 120);
+    doc.text(`Listado de residuos`, 15, 150);
 
     doc.autoTable({
       head: [["Residuo", "Cantidad", "Medida"]],
       body: tableData,
-      startY: 125,
+      startY: 155,
       theme: "grid",
       styles: {
         tableWidth: "auto",
@@ -386,6 +389,8 @@ const List = () => {
         valign: "middle",
       },
     });
+
+    
 
     doc.save(`${order.id}.pdf`);
   };

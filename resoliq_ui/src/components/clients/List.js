@@ -138,21 +138,39 @@ const List = () => {
 
   const columns = [
     {
-
       width: "30%",
       title: "Nombre",
-      render: (x) => <>{x.name}<br/>{x.dni}
-      </>,
+      render: (x) => <>{x.name}<br/>{x.dni}</>,
     },
-    { title: `Datos`,  render: (x) => <Row>
-      <Col span={12} style={{borderLeft:"1px solid black",borderTop:"1px solid black", padding:"2px"}}>{x.email}</Col>
-        <Col span={12} style={{borderLeft:"1px solid black",borderRight:"1px solid black", borderTop:"1px solid black", padding:"2px"}}>{x.phone_number}</Col>
-        <Col span={24} style={{borderTop:"1px solid black", borderLeft:"1px solid black", borderRight:"1px solid black", padding:"2px"}}>{x.commune}, {x.address}</Col>
-        <Col span={12} style={{borderTop:"1px solid black", borderLeft:"1px solid black", borderBottom:"1px solid black",padding:"2px"}}>{x.contact_name}</Col>
-        <Col span={12} style={{border:"1px solid black", padding:"2px"}}>{x.executive}</Col>
-
-      
-    </Row>},
+    { 
+      title: `Datos`,  
+      render: (x) => (
+        <Row>
+          {x.email && (
+            <Col span={10}>
+              Email: <br/>
+              {x.email}
+            </Col>
+          )}
+          {x.phone_number && <Col span={6} >
+            Telefono: <br/>
+            {x.phone_number}
+          </Col>}
+          {x.commune && <Col span={21} >  
+            Dirección: <br/>
+            {x.commune}, {x.address}
+          </Col>}
+          {x.contact_name && <Col span={10} >
+            Nombre contacto: <br/>
+            {x.contact_name}
+          </Col>}
+          {x.executive && <Col span={10} >
+            Ejecutivo: <br/>
+            {x.executive}
+          </Col>}
+        </Row>
+      ),
+    },
     {
       width: "10%",
       render: (x) => (

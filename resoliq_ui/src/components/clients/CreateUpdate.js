@@ -143,7 +143,7 @@ const CreateUpdate = () => {
         >
           <Input />
         </Form.Item>
-        <Form.Item label={"Región"} name={"region"} rules={[{ required:true, message:"Selcciona una región"}]}>
+        <Form.Item label={"Región"} name={"region"} >
           <Select placeholder={"Selecciona una región"} onSelect={(key)=> {
               const region = regions.find((region) => region.name === key)
               setCommunes(region.communes)

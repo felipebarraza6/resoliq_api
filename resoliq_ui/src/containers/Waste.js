@@ -23,7 +23,7 @@ const Waste = () => {
 
   return (
     <WasteContext.Provider value={{ state, dispatch }}>
-      <Row align={"middle"} justify={"space-around"}>
+      <Row align={"top"} justify={"space-around"}>
         <Col span={24} style={{ textAlign: "left", marginBottom: "10px" }}>
           <Tag>
             <b>/ RESIDUOS</b>

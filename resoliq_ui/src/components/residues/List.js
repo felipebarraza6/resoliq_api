@@ -43,7 +43,6 @@ const List = () => {
       notification.success({ message: "Residuo eliminado" });
     });
   };
-
   const downloadDataToExcel = async () => {
     const pageSize = 10; // Número de elementos por página
     let currentPage = 1; // Página actual
@@ -71,7 +70,7 @@ const List = () => {
     const filteredData = allData.map((item) => ({
       "Fecha creacion": item.created.slice(0, 10),
       Nombre: item.name,
-      Medica: item.type_medition,
+      Medida: item.type_medition,
       Cantidad: item.quantity,
     }));
 
@@ -134,6 +133,14 @@ const List = () => {
     XLSX.writeFile(workbook, `listado_residuos.xlsx`);
   };
 
+ 
+
+  useEffect(() => {
+    
+
+   
+  }, []);
+
   const columns = [
     {
       title: "Nombre",
@@ -141,13 +148,14 @@ const List = () => {
     },
     {
       title: "Existencias",
+      width: "50%",
       render: (x) => {
         return (
           <Row justify={"space-around"}>
-            <Col span={6}>
+            <Col span={12} >
               {x.quantity} ({x.type_medition}){" "}
             </Col>
-            <Col>
+            <Col span={6}>
               <Button
                 size="small"
                 type="primary"
@@ -224,7 +232,7 @@ const List = () => {
                 Historial
               </Button>
             </Col>
-            <Col>
+            <Col span={1}>
               <Button
                 icon={<PlusOutlined />}
                 type="primary"
@@ -243,7 +251,7 @@ const List = () => {
                 }}
               ></Button>
             </Col>
-            <Col>
+            <Col span={1}>
               <Button
                 icon={<MinusOutlined />}
                 type="primary"
@@ -267,16 +275,16 @@ const List = () => {
       },
     },
     {
-      width: "35%",
+      width: "10%",
       render: (x) => (
         <Row justify={"space-between"}>
-          <Col span={12}>
+          <Col span={24}>
             <Popconfirm
               title={"Estas seguro de eliminar el residuo?"}
               onConfirm={() => deleteResidue(x)}
             >
               <Button
-                style={{ marginRight: "10px" }}
+                style={{ marginBottom: "5px" }}
                 type="primary"
                 danger
                 icon={<DeleteFilled />}
@@ -286,7 +294,7 @@ const List = () => {
               </Button>{" "}
             </Popconfirm>
           </Col>
-          <Col span={12}>
+          <Col span={24}>
             <Button
               size="small"
               type="primary"
