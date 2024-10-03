@@ -16,6 +16,7 @@ import {
   RightCircleFilled,
   FileExcelFilled,
   MinusOutlined,
+  DownloadOutlined,
   PlusOutlined,
   HistoryOutlined,
 } from "@ant-design/icons";
@@ -145,6 +146,70 @@ const List = () => {
     XLSX.writeFile(workbook, `listado_residuos.xlsx`);
   };
 
+  const downloadListToExcel = async (list, e) => {
+    const filteredData = list.map((item) => ({
+      Residuo: e.name,
+      Fecha: item.created.slice(0, 10),
+      Cantidad: item.quantity,
+      Usuario: item.user.email,
+      Observacion: item.observation,
+    }));
+    const worksheet = XLSX.utils.json_to_sheet(filteredData);
+    const columnWidths = Object.keys(worksheet).reduce((widths, cell) => {
+      const column = cell.replace(/[0-9]/g, "");
+      const value = worksheet[cell].v;
+      const length = value ? value.toString().length : 10; // Default width if value is empty
+      widths[column] = Math.max(widths[column] || 0, length);
+      return widths;
+    }, {});
+
+    // Apply column widths to the worksheets
+    worksheet["!cols"] = Object.keys(columnWidths).map((column) => ({
+      wch: columnWidths[column],
+    }));
+
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, `Historial de ${e.name}`);
+
+    // Función para aplicar estilos a las celdas
+    const applyStyles = (worksheet, range, style) => {
+      const { s, e } = XLSX.utils.decode_range(range);
+      for (let row = s.r; row <= e.r; row++) {
+        for (let col = s.c; col <= e.c; col++) {
+          const cell = XLSX.utils.encode_cell({ r: row, c: col });
+          if (!worksheet[cell]) {
+            worksheet[cell] = {};
+          }
+          worksheet[cell].s = style;
+        }
+      }
+    };
+
+    // Crear estilos para las celdas
+    const borderStyle = {
+      border: {
+        top: { style: "thin", color: { rgb: "00000000" } },
+        bottom: { style: "thin", color: { rgb: "00000000" } },
+        left: { style: "thin", color: { rgb: "00000000" } },
+        right: { style: "thin", color: { rgb: "00000000" } },
+      },
+    };
+
+    const headerStyle = {
+      fill: { fgColor: { rgb: "00000000" } },
+      font: { color: { rgb: "FFFFFFFF" } },
+    };
+
+    // Aplicar estilos a las celdas con datos
+    applyStyles(worksheet, "A1:Z1000", borderStyle);
+
+    // Aplicar estilo a la primera fila
+    applyStyles(worksheet, "A1:Z1", headerStyle);
+
+    XLSX.writeFile(workbook, `historial_${e.name}.xlsx`);
+    console.log(filteredData);
+  };
   useEffect(() => {}, []);
 
   const columns = [
@@ -172,10 +237,21 @@ const List = () => {
                     width: 800,
                     content: (
                       <>
-                        {console.log(x)}
                         <Row style={{ marginTop: `20px` }}>
                           <Col span={24}>
                             <Table
+                              footer={() => (
+                                <Button
+                                  type={"primary"}
+                                  size="small"
+                                  icon={<DownloadOutlined />}
+                                  onClick={() =>
+                                    downloadListToExcel(x.history_residue, x)
+                                  }
+                                >
+                                  Descargar listado
+                                </Button>
+                              )}
                               bordered
                               size="small"
                               dataSource={x.history_residue}
