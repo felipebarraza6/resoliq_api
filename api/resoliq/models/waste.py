@@ -9,7 +9,7 @@ class Residue(ModelApi):
     name = models.CharField(max_length=300)
     type_medition = models.CharField(max_length=100)
     quantity = models.IntegerField(default=0)
-    quantity=  models.IntegerField(default=0)
+    quantity = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.name)
@@ -21,6 +21,7 @@ class RegisterResidue(ModelApi):
     quantity = models.IntegerField(default=0)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, blank=True, null=True)
+    observation = models.TextField(blank=True, null=True, max_length=2500)
 
     def __str__(self):
         return str(self.residue)

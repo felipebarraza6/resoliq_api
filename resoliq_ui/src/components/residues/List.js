@@ -1,5 +1,14 @@
 import React, { useContext, useEffect } from "react";
-import { Table, Button, Row, Col, Popconfirm, notification, Modal } from "antd";
+import {
+  Table,
+  Button,
+  Row,
+  Col,
+  Popconfirm,
+  notification,
+  Modal,
+  Typography,
+} from "antd";
 import api from "../../api/endpoints";
 import { WasteContext } from "../../containers/Waste";
 import {
@@ -11,6 +20,8 @@ import {
   HistoryOutlined,
 } from "@ant-design/icons";
 import * as XLSX from "xlsx";
+
+const { Paragraph } = Typography;
 
 const List = () => {
   const { state, dispatch } = useContext(WasteContext);
@@ -43,6 +54,7 @@ const List = () => {
       notification.success({ message: "Residuo eliminado" });
     });
   };
+
   const downloadDataToExcel = async () => {
     const pageSize = 10; // Número de elementos por página
     let currentPage = 1; // Página actual
@@ -133,13 +145,7 @@ const List = () => {
     XLSX.writeFile(workbook, `listado_residuos.xlsx`);
   };
 
- 
-
-  useEffect(() => {
-    
-
-   
-  }, []);
+  useEffect(() => {}, []);
 
   const columns = [
     {
@@ -152,7 +158,7 @@ const List = () => {
       render: (x) => {
         return (
           <Row justify={"space-around"}>
-            <Col span={12} >
+            <Col span={12}>
               {x.quantity} ({x.type_medition}){" "}
             </Col>
             <Col span={6}>
@@ -218,6 +224,11 @@ const List = () => {
                                       </Col>
                                     </Row>
                                   ),
+                                },
+                                {
+                                  title: `Observación`,
+                                  dataIndex: `observation`,
+                                  render: (r) => <Paragraph>{r}</Paragraph>,
                                 },
                               ]}
                             />

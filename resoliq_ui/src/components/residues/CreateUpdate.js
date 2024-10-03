@@ -57,8 +57,6 @@ const CreateUpdate = () => {
         values.quantity =
           parseFloat(state.select_to_edit.quantity) +
           parseFloat(values.quantity);
-        console.log(values.quantity);
-        console.log(state.select_to_edit.quantity);
         const register = api.register_residues.create({
           residue: state.select_to_edit.id,
           quantity: values.quantity - state.select_to_edit.quantity,
@@ -70,6 +68,7 @@ const CreateUpdate = () => {
         const register = api.register_residues.create({
           residue: state.select_to_edit.id,
           quantity: values.quantity - state.select_to_edit.quantity,
+          observation: values.observation,
         });
       }
     }
@@ -178,6 +177,12 @@ const CreateUpdate = () => {
             <Input />
           </Form.Item>
         )}
+        {state.add_quantity ||
+          (state.sus_quantity && (
+            <Form.Item name={"observation"} label={"Observación"}>
+              <Input.TextArea />
+            </Form.Item>
+          ))}
 
         <Form.Item style={{ float: "right" }}>
           <Button
