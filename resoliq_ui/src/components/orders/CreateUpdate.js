@@ -186,73 +186,40 @@ const CreateUpdate = () => {
   }
 
   const getClient = async () => {
-    const pageSize = 10; // Número de elementos por página
-    let currentPage = 1; // Página actual
-    let allData = []; // Array para almacenar todos los datos
-
-    // Función para obtener los datos de una página específica
-    const getDataPage = async (page) => {
-      const rq = await api.clients.list(page);
-      return rq.results;
-    };
-
-    // Obtener los datos de la primera página
-    let pageData = await getDataPage(currentPage);
-    allData = allData.concat(pageData);
-
-    // Obtener los datos de las páginas restantes
-    while (pageData.length === pageSize) {
+    let currentPage = 1;
+    let allData = [];
+    let response = await api.clients.list(currentPage);
+    allData = [...response.results];
+    while (response.next) {
       currentPage++;
-      pageData = await getDataPage(currentPage);
-      allData = allData.concat(pageData);
+      response = await api.clients.list(currentPage);
+      allData = [...allData, ...response.results];
     }
     setClients(allData);
   };
 
   const getDrivers = async () => {
-    const pageSize = 10; // Número de elementos por página
-    let currentPage = 1; // Página actual
-    let allData = []; // Array para almacenar todos los datos
-
-    // Función para obtener los datos de una página específica
-    const getDataPage = async (page) => {
-      const rq = await api.drivers.list(page);
-      return rq.results;
-    };
-
-    // Obtener los datos de la primera página
-    let pageData = await getDataPage(currentPage);
-    allData = allData.concat(pageData);
-
-    // Obtener los datos de las páginas restantes
-    while (pageData.length === pageSize) {
+    let currentPage = 1;
+    let allData = [];
+    let response = await api.drivers.list(currentPage);
+    allData = [...response.results];
+    while (response.next) {
       currentPage++;
-      pageData = await getDataPage(currentPage);
-      allData = allData.concat(pageData);
+      response = await api.drivers.list(currentPage);
+      allData = [...allData, ...response.results];
     }
     setDrivers(allData);
   };
 
   const getResidues = async () => {
-    const pageSize = 10; // Número de elementos por página
-    let currentPage = 1; // Página actual
-    let allData = []; // Array para almacenar todos los datos
-
-    // Función para obtener los datos de una página específica
-    const getDataPage = async (page) => {
-      const rq = await api.residues.list(page);
-      return rq.results;
-    };
-
-    // Obtener los datos de la primera página
-    let pageData = await getDataPage(currentPage);
-    allData = allData.concat(pageData);
-
-    // Obtener los datos de las páginas restantes
-    while (pageData.length === pageSize) {
+    let currentPage = 1;
+    let allData = [];
+    let response = await api.residues.list(currentPage);
+    allData = [...response.results];
+    while (response.next) {
       currentPage++;
-      pageData = await getDataPage(currentPage);
-      allData = allData.concat(pageData);
+      response = await api.residues.list(currentPage);
+      allData = [...allData, ...response.results];
     }
     setResidues(allData);
   };
