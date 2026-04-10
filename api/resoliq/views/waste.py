@@ -33,3 +33,4 @@ class RegisterResidueViewSet(viewsets.GenericViewSet,
     queryset = RegisterResidue.objects.all()
     serializer_class = RegisterResidueSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = []

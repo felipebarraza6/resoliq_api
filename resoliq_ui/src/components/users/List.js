@@ -1,9 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import { Table, Button, Row, Col, Popconfirm, notification } from "antd";
+import { Table, Button, Row, Col, Popconfirm, notification, Tag, Space, Typography, Avatar } from "antd";
 import api from "../../api/endpoints";
 import { UsersContext } from "../../containers/Users";
-import { DeleteFilled, RightCircleFilled } from "@ant-design/icons";
-import { type } from "@testing-library/user-event/dist/type";
+import { DeleteOutlined, EditOutlined, UserOutlined, IdcardOutlined } from "@ant-design/icons";
+
+const { Text } = Typography;
 
 const List = () => {
   const { state, dispatch } = useContext(UsersContext);
@@ -22,6 +23,7 @@ const List = () => {
       type: "select_to_edit",
       payload: { user },
     });
+    dispatch({ type: "set_drawer_visible", payload: true });
   };
 
   const deleteUser = async (user) => {
@@ -39,62 +41,71 @@ const List = () => {
 
   const columns = [
     {
-      title: "Nombre",
+      width: 280,
+      ellipsis: true,
+      title: "Usuario",
       render: (x) => (
-        <Row>
-          <Col span={24}>{x.first_name}</Col>
-          <Col span={24}> {x.last_name}</Col>
-        </Row>
+        <Space align="center">
+          <Avatar style={{ backgroundColor: '#1890ff' }} icon={<UserOutlined />} />
+          <div>
+            <div style={{ fontWeight: 'bold', color: '#030852' }}>{x.first_name} {x.last_name}</div>
+            <Text type="secondary" style={{ fontSize: '12px' }}>{x.email}</Text>
+          </div>
+        </Space>
       ),
     },
     {
-      title: "Datos",
-      render: (x) => {
-        return (
-          <Row>
-            <Col span={24}>{x.email}</Col>
-            <Col span={24}> {x.dni}</Col>
-          </Row>
-        );
-      },
+      width: 160,
+      responsive: ['sm'],
+      title: "DNI / RUT",
+      dataIndex: "dni",
+      render: (dni) => (
+        <Space>
+          <IdcardOutlined style={{ color: '#8c8c8c' }} />
+          <Text>{dni}</Text>
+        </Space>
+      )
     },
-
     {
-      title: "Tipo usuario",
+      width: 160,
+      title: "Rol",
       dataIndex: "type_user",
-      render: (type) => (type === "ADM" ? "Administrador" : "Bodega"),
+      render: (type) => (
+        <Tag color={type === "ADM" ? "gold" : "cyan"} style={{ borderRadius: '12px', padding: '0 10px' }}>
+          {type === "ADM" ? "Administrador" : "Bodega"}
+        </Tag>
+      ),
     },
     {
-      width: "28%",
+      title: "Acciones",
+      align: "center",
+      width: 220,
       render: (x) => (
-        <Row justify={"space-between"}>
-          <Col span={12}>
-            <Popconfirm
-              title={"Estas seguro de eliminar el usuario?"}
-              onConfirm={() => deleteUser(x)}
-            >
-              <Button
-                style={{ marginRight: "10px" }}
-                type="primary"
-                danger
-                icon={<DeleteFilled />}
-                size="small"
-              >
-                Eliminar
-              </Button>{" "}
-            </Popconfirm>
-          </Col>
-          <Col span={12}>
+        <Space wrap>
+          <Button
+            type="primary"
+            shape="round"
+            onClick={() => selectUser(x)}
+            icon={<EditOutlined />}
+            size="middle"
+          >
+            Editar
+          </Button>
+          <Popconfirm
+            title={"¿Estás seguro de eliminar el usuario?"}
+            onConfirm={() => deleteUser(x)}
+            okText="Sí, eliminar"
+            cancelText="Cancelar"
+          >
             <Button
-              size="small"
               type="primary"
-              onClick={() => selectUser(x)}
-              icon={<RightCircleFilled />}
-            >
-              Editar
-            </Button>
-          </Col>
-        </Row>
+              danger
+              shape="round"
+              icon={<DeleteOutlined />}
+              size="middle"
+            />
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
@@ -107,7 +118,8 @@ const List = () => {
     <Table
       dataSource={state.list.results}
       size="small"
-      title={() => <b>Usuarios registrados: {state.list.count}</b>}
+      scroll={{ x: 720 }}
+      tableLayout="fixed"
       bordered
       rowKey={(x) => x.id}
       pagination={{

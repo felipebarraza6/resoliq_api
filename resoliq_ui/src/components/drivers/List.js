@@ -26,6 +26,7 @@ const List = () => {
       type: "select_to_edit",
       payload: { driver },
     });
+    dispatch({ type: "set_drawer_visible", payload: true });
   };
 
   const deleteDriver = async (driver) => {
@@ -133,17 +134,18 @@ const List = () => {
 
   const columns = [
     {
+      width: 240,
       title: "Nombre",
       dataIndex: "name",
     },
-    { title: `Rut`, dataIndex: `dni` },
-    { title: `Telefono`, dataIndex: `phone_number` },
-    { title: `Patente`, dataIndex: `vehicle_plate` },
+    { width: 160, title: `Rut`, dataIndex: `dni` },
+    { width: 180, title: `Telefono`, dataIndex: `phone_number` },
+    { width: 140, title: `Patente`, dataIndex: `vehicle_plate` },
     {
-      width: "35%",
+      width: 260,
       render: (x) => (
-        <Row justify={"space-between"}>
-          <Col span={12}>
+        <Row justify={"space-between"} gutter={[8, 8]}>
+          <Col>
             <Popconfirm
               title={"Estas seguro de eliminar el conductor?"}
               onConfirm={() => deleteDriver(x)}
@@ -159,7 +161,7 @@ const List = () => {
               </Button>{" "}
             </Popconfirm>
           </Col>
-          <Col span={12}>
+          <Col>
             <Button
               size="small"
               type="primary"
@@ -182,11 +184,11 @@ const List = () => {
     <Table
       dataSource={state.list.results}
       size="small"
+      scroll={{ x: true }}
+      tableLayout="fixed"
       title={() => (
         <Row justify={"space-between"}>
-          <Col>
-            <b>Conductores registrados: {state.list.count}</b>
-          </Col>
+          
           <Col>
             <Button
               style={{ backgroundColor: `#389e0d`, borderColor: `#389e0d` }}

@@ -95,18 +95,12 @@ const CreateUpdate = () => {
   }, [state.select_to_edit]);
 
   return (
-    <Card
-      hoverable
-      title={
-        state.select_to_edit ? (
-          <>
-            <Tag color="blue">{state.select_to_edit.name}</Tag>
-          </>
-        ) : (
-          "Crear nuevo conductor"
-        )
-      }
-    >
+    <div style={{ padding: '10px' }}>
+      {state.select_to_edit && (
+        <div style={{ marginBottom: '20px' }}>
+          <Tag color="blue-inverse">Editando: {state.select_to_edit.name}</Tag>
+        </div>
+      )}
       <Form
         form={form}
         layout="horizontal"
@@ -144,30 +138,28 @@ const CreateUpdate = () => {
           <Input />
         </Form.Item>
 
-        <Form.Item style={{ float: "right" }}>
+        <Form.Item style={{ marginTop: '20px', textAlign: 'right' }}>
+          <Button
+            onClick={createOrClear}
+            icon={
+              state.select_to_edit ? <PlusCircleFilled /> : <ClearOutlined />
+            }
+            style={{ marginRight: "10px" }}
+          >
+            {state.select_to_edit ? "Crear nuevo" : "Limpiar"}
+          </Button>
           <Button
             htmlType="submit"
             type="primary"
-            style={{
-              marginRight: "10px",
-            }}
             icon={
               state.select_to_edit ? <RetweetOutlined /> : <PlusCircleFilled />
             }
           >
             {state.select_to_edit ? `Actualizar` : "Crear"}
           </Button>
-          <Button
-            onClick={createOrClear}
-            icon={
-              state.select_to_edit ? <PlusCircleFilled /> : <ClearOutlined />
-            }
-          >
-            {state.select_to_edit ? "Crear nuevo" : "Limpiar"}
-          </Button>
         </Form.Item>
       </Form>
-    </Card>
+    </div>
   );
 };
 

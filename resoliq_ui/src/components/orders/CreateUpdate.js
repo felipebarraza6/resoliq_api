@@ -39,6 +39,8 @@ const CreateUpdate = () => {
   const [detailResiduals, setDetailResiduals] = useState([]);
   const [listPreSelect, setListPreSelect] = useState({});
 
+  const [isLoading, setIsLoading] = useState(false);
+
   function createOrClear() {
     if (state.select_to_edit) {
       dispatch({
@@ -54,127 +56,131 @@ const CreateUpdate = () => {
   }
 
   async function createOrder(values) {
-    let validatedList = [];
-    const clonedDetailResiduals = detailResiduals.reduce((acc, cur) => {
-      const existingResidual = acc.find(
-        (residual) => residual.residue === cur.residue.id
-      );
-      if (existingResidual) {
-        existingResidual.quantity += cur.quantity;
-      } else {
-        acc.push({
-          residue: cur.residue.id,
-          quantity: cur.quantity,
-          quantity_res: parseInt(cur.residue.quantity + cur.quantity),
-        });
-      }
-      return acc;
-    }, []);
-
-    for (const detail of clonedDetailResiduals) {
-      const rq = await api.register_residues.create(detail).then((res) => {
-        validatedList.push(res.id);
-      });
-    }
-
-    values = {
-      ...values,
-      date: values.date.format("YYYY-MM-DD"),
-      registers: validatedList,
-    };
-    await api.orders
-      .create(values)
-      .then(async () => {
-        dispatch({
-          type: "update_list",
-        });
-        form.resetFields();
-        const udpdateQuantity = await Promise.all(
-          clonedDetailResiduals.map(async (register) => {
-            console.log(register);
-            const rq = await api.residues.update(register.residue, {
-              quantity: register.quantity_res,
-            });
-            console.log(rq);
-          })
+    setIsLoading(true);
+    try {
+      let validatedList = [];
+      const clonedDetailResiduals = detailResiduals.reduce((acc, cur) => {
+        const existingResidual = acc.find(
+          (residual) => residual.residue === cur.residue.id
         );
-        setListPreSelect({});
-        setDetailResiduals([]);
-      })
-      .catch((e) => {
-        console.log(e);
-        const errors = e.response?.data;
-        const errorList = Object.keys(errors).map((key) => errors[key]);
-        Modal.error({
-          title:
-            "Errores al crear la nueva orden, revisa tus datos ingresados.",
-          content: (
-            <ul>
-              {errorList.map((error) => (
-                <li key={error}>{error}</li>
-              ))}
-            </ul>
-          ),
-        });
+        if (existingResidual) {
+          existingResidual.quantity += cur.quantity;
+        } else {
+          acc.push({
+            residue: cur.residue.id,
+            quantity: cur.quantity,
+            quantity_res: parseInt(cur.residue.quantity + cur.quantity),
+          });
+        }
+        return acc;
+      }, []);
+
+      for (const detail of clonedDetailResiduals) {
+        const res = await api.register_residues.create(detail);
+        validatedList.push(res.id);
+      }
+
+      values = {
+        ...values,
+        date: values.date.format("YYYY-MM-DD"),
+        registers: validatedList,
+      };
+      
+      await api.orders.create(values);
+      
+      dispatch({
+        type: "update_list",
       });
+      form.resetFields();
+      
+      await Promise.all(
+        clonedDetailResiduals.map(async (register) => {
+          await api.residues.update(register.residue, {
+            quantity: register.quantity_res,
+          });
+        })
+      );
+      
+      setListPreSelect({});
+      setDetailResiduals([]);
+      notification.success({ message: "Orden creada exitosamente" });
+    } catch (e) {
+      console.log(e);
+      const errors = e.response?.data || { general: "Error desconocido" };
+      const errorList = Object.keys(errors).map((key) => errors[key]);
+      Modal.error({
+        title: "Errores al crear la nueva orden, revisa tus datos ingresados.",
+        content: (
+          <ul>
+            {errorList.map((error, idx) => (
+              <li key={idx}>{error}</li>
+            ))}
+          </ul>
+        ),
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   async function updateOrder(values) {
-    let validatedList = [];
-    const clonedDetailResiduals = detailResiduals.reduce((acc, cur) => {
-      const existingResidual = acc.find(
-        (residual) => residual.residue.residual === cur.residue.id
-      );
-      if (existingResidual) {
-        existingResidual.residue.quantity += cur.quantity;
-      } else {
-        acc.push({
-          residue: cur.residue.id,
-          quantity: cur.quantity,
-        });
-      }
-      return acc;
-    }, []);
+    setIsLoading(true);
+    try {
+      let validatedList = [];
+      const clonedDetailResiduals = detailResiduals.reduce((acc, cur) => {
+        const existingResidual = acc.find(
+          (residual) => residual.residue.residual === cur.residue.id
+        );
+        if (existingResidual) {
+          existingResidual.residue.quantity += cur.quantity;
+        } else {
+          acc.push({
+            residue: cur.residue.id,
+            quantity: cur.quantity,
+          });
+        }
+        return acc;
+      }, []);
 
-    for (const detail of clonedDetailResiduals) {
-      const rq = await api.register_residues.create(detail).then((res) => {
+      for (const detail of clonedDetailResiduals) {
+        const res = await api.register_residues.create(detail);
         validatedList.push(res.id);
-      });
-    }
+      }
 
-    values = {
-      ...values,
-      date: values.date.format("YYYY-MM-DD"),
-      registers: validatedList,
-    };
-    await api.orders
-      .update(state.select_to_edit.id, values)
-      .then(() => {
-        dispatch({
-          type: "update_list",
-        });
-        dispatch({ type: "select_to_edit", payload: { order: null } });
-        form.resetFields();
-        setListPreSelect({});
-        setDetailResiduals([]);
-        notification.success({
-          message: "Orden actualizado correctamente.",
-        });
-      })
-      .catch((e) => {
-        const errors = e.response.data;
-        const errorList = Object.keys(errors).map((key) => errors[key]);
-        Modal.error({
-          title: "Errores al actualizar la Orden.",
-          content: (
-            <ul>
-              {errorList.map((error) => (
-                <li key={error}>{error}</li>
-              ))}
-            </ul>
-          ),
-        });
+      values = {
+        ...values,
+        date: values.date.format("YYYY-MM-DD"),
+        registers: validatedList,
+      };
+      
+      await api.orders.update(state.select_to_edit.id, values);
+      
+      dispatch({
+        type: "update_list",
       });
+      dispatch({ type: "select_to_edit", payload: { order: null } });
+      form.resetFields();
+      setListPreSelect({});
+      setDetailResiduals([]);
+      notification.success({
+        message: "Orden actualizado correctamente.",
+      });
+    } catch (e) {
+      const errors = e.response?.data || { general: "Error desconocido" };
+      const errorList = Object.keys(errors).map((key) => errors[key]);
+      Modal.error({
+        title: "Errores al actualizar la Orden.",
+        content: (
+          <ul>
+            {errorList.map((error, idx) => (
+              <li key={idx}>{error}</li>
+            ))}
+          </ul>
+        ),
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function createOrUpdateOrder(values) {
@@ -241,18 +247,12 @@ const CreateUpdate = () => {
   }, [state.select_to_edit]);
 
   return (
-    <Card
-      hoverable
-      title={
-        state.select_to_edit ? (
-          <>
-            <Tag color="blue">{state.select_to_edit.id}</Tag>
-          </>
-        ) : (
-          "Crear nueva orden"
-        )
-      }
-    >
+    <div style={{ padding: '10px' }}>
+      {state.select_to_edit && (
+        <div style={{ marginBottom: '20px' }}>
+          <Tag color="blue-inverse">Editando: {state.select_to_edit.id}</Tag>
+        </div>
+      )}
       <Form
         form={form}
         layout="horizontal"
@@ -441,30 +441,29 @@ const CreateUpdate = () => {
           <Input.TextArea placeholder="Describe..." />
         </Form.Item>
 
-        <Form.Item style={{ float: "right" }}>
-          <Button
-            htmlType="submit"
-            type="primary"
-            style={{
-              marginRight: "10px",
-            }}
-            icon={
-              state.select_to_edit ? <RetweetOutlined /> : <PlusCircleFilled />
-            }
-          >
-            {state.select_to_edit ? `Actualizar` : "Crear"}
-          </Button>
+        <Form.Item style={{ marginTop: '20px', textAlign: 'right' }}>
           <Button
             onClick={createOrClear}
             icon={
               state.select_to_edit ? <PlusCircleFilled /> : <ClearOutlined />
             }
+            style={{ marginRight: "10px" }}
           >
             {state.select_to_edit ? "Crear nuevo" : "Limpiar"}
           </Button>
+          <Button
+            htmlType="submit"
+            type="primary"
+            icon={
+              state.select_to_edit ? <RetweetOutlined /> : <PlusCircleFilled />
+            }
+            loading={isLoading}
+          >
+            {state.select_to_edit ? `Actualizar` : "Crear"}
+          </Button>
         </Form.Item>
       </Form>
-    </Card>
+    </div>
   );
 };
 

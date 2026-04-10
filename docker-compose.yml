@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  api:
+    build: ./api
+    image: resoliq-api
+    container_name: resoliq-api
+    restart: unless-stopped
+    volumes:
+      - ./db.sqlite3:/code/db.sqlite3
+      - ./media:/code/media
+      - ./static:/code/static
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:-django-insecure-change-this-in-production}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-*}

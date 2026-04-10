@@ -44,6 +44,12 @@ export const wasteReducer = (state, action) => {
         },
       };
 
+    case "set_drawer_visible":
+      return {
+        ...state,
+        is_drawer_visible: action.payload,
+      };
+
     default:
       return state;
   }

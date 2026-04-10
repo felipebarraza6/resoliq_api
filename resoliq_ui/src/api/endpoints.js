@@ -1,4 +1,3 @@
-import create from "@ant-design/icons/lib/components/IconFont";
 import { POST, POST_LOGIN, GET, PATCH, DELETE } from "./config";
 
 export const login = async (data) => {

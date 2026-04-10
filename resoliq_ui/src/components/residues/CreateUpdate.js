@@ -121,28 +121,22 @@ const CreateUpdate = () => {
   }, [state.select_to_edit]);
 
   return (
-    <Card
-      hoverable
-      title={
-        state.select_to_edit ? (
-          <>
-            {state.add_quantity || state.sus_quantity ? (
-              state.add_quantity ? (
-                `Agregar existencias a ${state.select_to_edit.name}`
-              ) : (
-                `Retirar existencias a ${state.select_to_edit.name}`
-              )
-            ) : (
-              <Tag color="blue-inverse">
-                Actualizando: {state.select_to_edit.name}
-              </Tag>
-            )}
-          </>
-        ) : (
-          "Crear nuevo residuo"
-        )
-      }
-    >
+    <div style={{ padding: '10px' }}>
+      {state.select_to_edit && (
+        <div style={{ marginBottom: '20px' }}>
+          {state.add_quantity || state.sus_quantity ? (
+            <Tag color={state.add_quantity ? "green-inverse" : "red-inverse"}>
+              {state.add_quantity
+                ? `Agregar existencias a ${state.select_to_edit.name}`
+                : `Retirar existencias a ${state.select_to_edit.name}`}
+            </Tag>
+          ) : (
+            <Tag color="blue-inverse">
+              Actualizando: {state.select_to_edit.name}
+            </Tag>
+          )}
+        </div>
+      )}
       <Form
         form={form}
         layout="horizontal"
@@ -184,13 +178,19 @@ const CreateUpdate = () => {
             </Form.Item>
           ))}
 
-        <Form.Item style={{ float: "right" }}>
+        <Form.Item style={{ marginTop: '20px', textAlign: 'right' }}>
+          <Button
+            onClick={createOrClear}
+            icon={
+              state.select_to_edit ? <PlusCircleFilled /> : <ClearOutlined />
+            }
+            style={{ marginRight: "10px" }}
+          >
+            {state.select_to_edit ? "Crear nuevo" : "Limpiar"}
+          </Button>
           <Button
             htmlType="submit"
             type="primary"
-            style={{
-              marginRight: "10px",
-            }}
             icon={
               state.select_to_edit ? (
                 state.add_quantity || state.sus_quantity ? (
@@ -219,17 +219,9 @@ const CreateUpdate = () => {
               "Crear"
             )}
           </Button>
-          <Button
-            onClick={createOrClear}
-            icon={
-              state.select_to_edit ? <PlusCircleFilled /> : <ClearOutlined />
-            }
-          >
-            {state.select_to_edit ? "Crear nuevo" : "Limpiar"}
-          </Button>
         </Form.Item>
       </Form>
-    </Card>
+    </div>
   );
 };
 

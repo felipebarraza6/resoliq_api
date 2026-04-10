@@ -1,29 +1,38 @@
 # Base image.
-FROM python:3
+FROM python:3.11-slim
 
-RUN mkdir /code
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 # Set working dir.
 WORKDIR /code
 
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Add python requirements file.
-ADD requirements.txt /code/
+COPY requirements.txt /code/
 
-# Install required programs.
-RUN pip install -r requirements.txt
-RUN apt-get update
-RUN apt-get install -y \
-    gettext \
-    nginx \
-    vim 
-    
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-RUN rm /etc/nginx/sites-enabled/default
-RUN ln -s /code/conf/nginx-app.conf /etc/nginx/sites-enabled/
-ADD . /code/
+# Copy project
+COPY . /code/
 
+# Create directories for static and media files
+RUN mkdir -p /code/static /code/media
 
-# Run script file.
-CMD ["python3", "./manage.py", "runserver", "0.0.0.0:8000"]
+# Copy entrypoint script
+COPY entrypoint.sh /code/
+RUN chmod +x /code/entrypoint.sh
 
+# Expose port
+EXPOSE 8000
 
+# Set entrypoint and default command
+ENTRYPOINT ["/code/entrypoint.sh"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "60", "api.wsgi:application"]

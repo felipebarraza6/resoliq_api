@@ -2,37 +2,65 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Global transitions and animations */
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
+@keyframes fadeIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(5px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth transitions for all ant components */
+.ant-btn,
+.ant-card,
+.ant-menu-item,
+.ant-input,
+.ant-select-selector {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.ant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+}
+
+.ant-btn:hover {
+  transform: translateY(-1px);
+}
+
+.ant-menu-item-selected {
+  background-color: #1890ff !important;
+}
+
+/* Base resets */
+body {
+  background-color: #f0f2f5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Responsive Utilities */
+@media (min-width: 992px) {
+  .show-on-mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .hide-on-mobile-small {
+    display: none !important;
   }
 }

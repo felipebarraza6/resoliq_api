@@ -34,6 +34,7 @@ const List = () => {
       type: "select_to_edit",
       payload: { client },
     });
+    dispatch({ type: "set_drawer_visible", payload: true });
   };
 
   const deleteCliennt = async (client) => {
@@ -145,7 +146,7 @@ const List = () => {
 
   const columns = [
     {
-      width: "25%",
+      width: 260,
       title: "Nombre",
       render: (x) => (
         <>
@@ -156,15 +157,15 @@ const List = () => {
       ),
     },
     {
-      width: "40%",
+      width: 320,
       title: `Email`,
       dataIndex: `email`,
       render: (email) => (email ? email : "Sin información"),
     },
     {
-      width: "26%",
+      width: 260,
       render: (x) => (
-        <Row justify={"space-between"}>
+        <Row justify={"space-between"} gutter={[8, 8]}>
           <Col style={{ marginBottom: "7px" }}>
             <Popconfirm
               title={"Estas seguro de eliminar el residuo?"}
@@ -203,6 +204,8 @@ const List = () => {
   return (
     <Table
       dataSource={state.list.results}
+      scroll={{ x: true }}
+      tableLayout="fixed"
       expandedRowRender={(record) => (
         <Descriptions bordered size="small" layout="vertical">
           <Descriptions.Item label="Email">
@@ -227,10 +230,8 @@ const List = () => {
       size="small"
       title={() => (
         <Row justify={"space-between"}>
-          <Col>
-            <b>Clientes registrados: {state.list.count}</b>
-          </Col>
-          <Col>
+         
+          <Col justify={`end`}>
             <Button
               style={{ backgroundColor: `#389e0d`, borderColor: `#389e0d` }}
               type={`primary`}

@@ -8,6 +8,7 @@ import {
   notification,
   Modal,
   Typography,
+  Space,
 } from "antd";
 import api from "../../api/endpoints";
 import { WasteContext } from "../../containers/Waste";
@@ -41,6 +42,7 @@ const List = () => {
       type: "select_to_edit",
       payload: { residue },
     });
+    dispatch({ type: "set_drawer_visible", payload: true });
   };
 
   const deleteResidue = async (residue) => {
@@ -214,157 +216,158 @@ const List = () => {
 
   const columns = [
     {
+      width: 240,
       title: "Nombre",
       dataIndex: "name",
     },
     {
       title: "Existencias",
-      width: "50%",
+      width: 420,
       render: (x) => {
         return (
-          <Row justify={"space-around"}>
-            <Col span={12}>
+          <Row gutter={[8, 8]} align="middle" wrap>
+            <Col xs={24} sm={10}>
               {x.quantity} ({x.type_medition}){" "}
             </Col>
-            <Col span={6}>
-              <Button
-                size="small"
-                type="primary"
-                onClick={() =>
-                  Modal.info({
-                    title: `Historial de ${x.name}`,
-                    icon: <HistoryOutlined />,
-                    width: 800,
-                    content: (
-                      <>
-                        <Row style={{ marginTop: `20px` }}>
-                          <Col span={24}>
-                            <Table
-                              footer={() => (
-                                <Button
-                                  type={"primary"}
-                                  size="small"
-                                  icon={<DownloadOutlined />}
-                                  onClick={() =>
-                                    downloadListToExcel(x.history_residue, x)
-                                  }
-                                >
-                                  Descargar listado
-                                </Button>
-                              )}
-                              bordered
-                              size="small"
-                              dataSource={x.history_residue}
-                              columns={[
-                                {
-                                  title: `Fecha`,
-                                  dataIndex: `created`,
-                                  render: (x) => (
-                                    <>
-                                      {x.slice(0, 10)} {x.slice(11, 16)} hrs
-                                    </>
-                                  ),
-                                },
-                                {
-                                  title: `Cantidad`,
-                                  dataIndex: `quantity`,
-                                  render: (r) => (
-                                    <>
-                                      <b>{r} </b> <br />
-                                    </>
-                                  ),
-                                },
-                                {
-                                  title: `Usuario`,
-                                  dataIndex: `user`,
-                                  render: (user) => (
-                                    <Row>
-                                      {console.log(user)}
-                                      <Col>{user && user.email}</Col>
-                                    </Row>
-                                  ),
-                                },
-                                {
-                                  title: `Procedencía`,
-                                  dataIndex: `user`,
-                                  render: (user) => (
-                                    <Row>
-                                      <Col>
-                                        {user && (
-                                          <>
-                                            {user.type_user === `ADM`
-                                              ? `Administrador`
-                                              : `Bodega`}
-                                          </>
-                                        )}
-                                      </Col>
-                                    </Row>
-                                  ),
-                                },
-                                {
-                                  title: `Observación`,
-                                  dataIndex: `observation`,
-                                  render: (r) => <Paragraph>{r}</Paragraph>,
-                                },
-                              ]}
-                            />
-                          </Col>
-                        </Row>
-                      </>
-                    ),
-                  })
-                }
-                icon={<HistoryOutlined />}
-              >
-                Historial
-              </Button>
-            </Col>
-            <Col span={1}>
-              <Button
-                icon={<PlusOutlined />}
-                type="primary"
-                shape="circle"
-                size="small"
-                style={{ marginRight: "20px" }}
-                onClick={() => {
-                  dispatch({
-                    type: "select_to_add_rest",
-                    payload: {
-                      residue: { ...x },
-                      add_quantity: true,
-                      sus_quantity: false,
-                    },
-                  });
-                }}
-              ></Button>
-            </Col>
-            <Col span={1}>
-              <Button
-                icon={<MinusOutlined />}
-                type="primary"
-                shape="circle"
-                size="small"
-                style={{ marginRight: "20px" }}
-                onClick={() => {
-                  dispatch({
-                    type: "select_to_add_rest",
-                    payload: {
-                      residue: { ...x },
-                      add_quantity: false,
-                      sus_quantity: true,
-                    },
-                  });
-                }}
-              ></Button>
+            <Col xs={24} sm={14}>
+              <Space wrap size={[8, 8]} style={{ display: "flex", justifyContent: "flex-start" }}>
+                <Button
+                  size="small"
+                  type="primary"
+                  onClick={() =>
+                    Modal.info({
+                      title: `Historial de ${x.name}`,
+                      icon: <HistoryOutlined />,
+                      width: 800,
+                      style: { top: 0 },
+                      content: (
+                        <>
+                          <Row style={{ marginTop: `20px` }}>
+                            <Col span={24}>
+                              <Table
+                                footer={() => (
+                                  <Button
+                                    type={"primary"}
+                                    size="small"
+                                    icon={<DownloadOutlined />}
+                                    onClick={() =>
+                                      downloadListToExcel(x.history_residue, x)
+                                    }
+                                  >
+                                    Descargar listado
+                                  </Button>
+                                )}
+                                bordered
+                                size="small"
+                                scroll={{ x: true }}
+                                dataSource={x.history_residue}
+                                columns={[
+                                  {
+                                    title: `Fecha`,
+                                    dataIndex: `created`,
+                                    render: (x) => (
+                                      <>
+                                        {x.slice(0, 10)} {x.slice(11, 16)} hrs
+                                      </>
+                                    ),
+                                  },
+                                  {
+                                    title: `Cantidad`,
+                                    dataIndex: `quantity`,
+                                    render: (r) => (
+                                      <>
+                                        <b>{r} </b> <br />
+                                      </>
+                                    ),
+                                  },
+                                  {
+                                    title: `Usuario`,
+                                    dataIndex: `user`,
+                                    render: (user) => (
+                                      <Row>
+                                        {console.log(user)}
+                                        <Col>{user && user.email}</Col>
+                                      </Row>
+                                    ),
+                                  },
+                                  {
+                                    title: `Procedencía`,
+                                    dataIndex: `user`,
+                                    render: (user) => (
+                                      <Row>
+                                        <Col>
+                                          {user && (
+                                            <>
+                                              {user.type_user === `ADM`
+                                                ? `Administrador`
+                                                : `Bodega`}
+                                            </>
+                                          )}
+                                        </Col>
+                                      </Row>
+                                    ),
+                                  },
+                                  {
+                                    title: `Observación`,
+                                    dataIndex: `observation`,
+                                    render: (r) => <Paragraph>{r}</Paragraph>,
+                                  },
+                                ]}
+                              />
+                            </Col>
+                          </Row>
+                        </>
+                      ),
+                    })
+                  }
+                  icon={<HistoryOutlined />}
+                >
+                  Historial
+                </Button>
+                <Button
+                  icon={<PlusOutlined />}
+                  type="primary"
+                  shape="circle"
+                  size="small"
+                  onClick={() => {
+                    dispatch({
+                      type: "select_to_add_rest",
+                      payload: {
+                        residue: { ...x },
+                        add_quantity: true,
+                        sus_quantity: false,
+                      },
+                    });
+                    dispatch({ type: "set_drawer_visible", payload: true });
+                  }}
+                />
+                <Button
+                  icon={<MinusOutlined />}
+                  type="primary"
+                  shape="circle"
+                  size="small"
+                  onClick={() => {
+                    dispatch({
+                      type: "select_to_add_rest",
+                      payload: {
+                        residue: { ...x },
+                        add_quantity: false,
+                        sus_quantity: true,
+                      },
+                    });
+                    dispatch({ type: "set_drawer_visible", payload: true });
+                  }}
+                />
+              </Space>
             </Col>
           </Row>
         );
       },
     },
     {
-      width: "10%",
+      width: 220,
       render: (x) => (
-        <Row justify={"space-between"}>
+        <Row justify={"space-between"} gutter={[8, 8]}>
           <Col span={24}>
             <Popconfirm
               title={"Estas seguro de eliminar el residuo?"}
@@ -404,11 +407,11 @@ const List = () => {
     <Table
       dataSource={state.list.results}
       size="small"
+      scroll={{ x: true }}
+      tableLayout="fixed"
       title={() => (
         <Row justify={"space-between"}>
-          <Col>
-            <b>Residuos registrados: {state.list.count}</b>
-          </Col>
+          
           <Col>
             <Button
               style={{ backgroundColor: `#389e0d`, borderColor: `#389e0d` }}

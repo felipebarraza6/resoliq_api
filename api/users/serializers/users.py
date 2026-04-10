@@ -104,4 +104,4 @@ class UserSignUpSerializer(serializers.Serializer):
     def create(self, data):
         data.pop('password_confirmation')
         user = User.objects.create_user(**data, is_active=True)
-        return data
+        return user

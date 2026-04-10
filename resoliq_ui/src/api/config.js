@@ -1,7 +1,9 @@
-import axios from "axios";
+import axiosImport from "axios";
 
-//const BASE_URL = "http://localhost:8000/api/";
-const BASE_URL = "http://137.184.152.245:8001/api/";
+const axios = axiosImport?.default || axiosImport;
+
+const BASE_URL = "http://localhost:8000/api/";
+//const BASE_URL = "http://137.184.152.245:8001/api/";
 
 export const Axios = axios.create({
   baseURL: BASE_URL,

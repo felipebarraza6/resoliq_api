@@ -1,31 +1,22 @@
-version: "3"
-
-volumes:
-  local_postgres_data: {}
-  local_postgres_data_backups: {}
 services:
-  postgres:
-    image: postgres:12
-    volumes:
-      - local_postgres_data:/var/lib/postgresql/data
-      - local_postgres_data_backups:/backups
-    ports:
-      - "5430:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: api
-      PGDATA: /data/postgres
-
-  api: 
-    build: ./api
-    image: api
-    depends_on:
-      - postgres
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    image: api-dev
     volumes:
       - .:/code
+      - ./db.sqlite3:/code/db.sqlite3
+      - ./media:/code/media
     ports:
       - "8000:8000"
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=dev-secret-key-not-for-production
+      - ALLOWED_HOSTS=*
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
 
   #react:
   #  build: ./resoliq_ui
@@ -33,5 +24,4 @@ services:
   #  ports:
   #    - "4200:80"
   #  depends_on:
-  #    - api 
-  #    - postgres
+  #    - api

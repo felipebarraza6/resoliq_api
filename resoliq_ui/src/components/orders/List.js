@@ -9,6 +9,9 @@ import {
   Collapse,
   Tag,
   Modal,
+  Descriptions,
+  Divider,
+  Typography,
 } from "antd";
 import api from "../../api/endpoints";
 import { OrdersContext } from "../../containers/Orders";
@@ -39,6 +42,7 @@ const List = () => {
       type: "select_to_edit",
       payload: { order },
     });
+    dispatch({ type: "set_drawer_visible", payload: true });
   };
 
   const deleteOrder = async (order) => {
@@ -54,26 +58,126 @@ const List = () => {
     });
   };
 
+  const renderOrderPreview = (order) => {
+    const data = order.registers.map((r, i) => ({
+      key: i,
+      residueName: r.residue.name,
+      quantity: r.quantity,
+      measure: r.residue.type_medition,
+    }));
+    const total = order.registers.reduce((acc, r) => acc + r.quantity, 0);
+    return (
+      <div style={{ paddingTop: 8 }}>
+        <Row align="middle" justify="space-between" gutter={[16, 16]}>
+          <Col>
+            <img src={logo_png} alt="logo" style={{ height: 48 }} />
+          </Col>
+          <Col>
+            <div style={{ textAlign: "right", lineHeight: 1.2 }}>
+              <div style={{ fontWeight: 600 }}>RESOLIQ LTDA</div>
+              <div>RUT: 76.365.199-1</div>
+              <div>LOS CANELOS 571 EL BOSQUE, CHILLAN</div>
+            </div>
+          </Col>
+        </Row>
+        <Divider style={{ margin: "12px 0" }} />
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={12}>
+            <Descriptions size="small" column={1} title="Cliente" bordered>
+              <Descriptions.Item label="Nombre">
+                {order.client.name}
+              </Descriptions.Item>
+              <Descriptions.Item label="RUT">
+                {order.client.dni}
+              </Descriptions.Item>
+              <Descriptions.Item label="Teléfono">
+                {order.client.phone_number}
+              </Descriptions.Item>
+              <Descriptions.Item label="Dirección">
+                {order.client.address}
+              </Descriptions.Item>
+              <Descriptions.Item label="Tipo">
+                {order.is_reposition ? "Reposición" : "Normal"}
+              </Descriptions.Item>
+            </Descriptions>
+          </Col>
+          <Col xs={24} md={12}>
+            <Descriptions size="small" column={1} title="Conductor" bordered>
+              <Descriptions.Item label="Nombre">
+                {order.driver.name}
+              </Descriptions.Item>
+              <Descriptions.Item label="RUT">
+                {order.driver.dni}
+              </Descriptions.Item>
+              <Descriptions.Item label="Patente">
+                {order.driver.vehicle_plate}
+              </Descriptions.Item>
+              <Descriptions.Item label="Teléfono">
+                {order.driver.phone_number}
+              </Descriptions.Item>
+            </Descriptions>
+          </Col>
+        </Row>
+        <Divider style={{ margin: "12px 0" }} />
+        <Row justify="space-between" align="middle" style={{ marginBottom: 8 }}>
+          <Col>
+            <Tag color="blue">Orden #{order.id}</Tag>
+          </Col>
+          <Col>
+            <Tag color="green">{order.date}</Tag>
+          </Col>
+        </Row>
+        <Table
+          size="small"
+          bordered
+          pagination={false}
+          dataSource={data}
+          columns={[
+            { title: "Residuo", dataIndex: "residueName" },
+            { title: "Cantidad", dataIndex: "quantity", align: "right", width: 120 },
+            { title: "Medida", dataIndex: "measure", width: 140 },
+          ]}
+          footer={() => (
+            <Row justify="end">
+              <b style={{ marginRight: 8 }}>Total:</b> {total}
+            </Row>
+          )}
+        />
+        {order.observation ? (
+          <>
+            <Divider style={{ margin: "12px 0" }} />
+            <div>
+              <b>Observación</b>
+              <div style={{ marginTop: 6 }}>{order.observation}</div>
+            </div>
+          </>
+        ) : null}
+      </div>
+    );
+  };
+
   const columns = [
     {
+      width: 320,
       title: "Ordenes",
       render: (x) => (
-        <Row align={`middle`}>
+        <Row align={`middle`} gutter={[8, 8]}>
           <Col span={24} style={{ marginBottom: `3px` }}>
             <Tag color={`blue-inverse`}>{x.id}</Tag>
           </Col>
-          <Col style={{ marginBottom: `3px` }}>
+          <Col>
             Fecha:
             <br />
             <Tag color={`green-inverse`}>{x.date}</Tag>
           </Col>
-          <Col span={6} style={{ marginTop: `-5px` }}>
+          <Col>
             Cliente:
             <Button
               size={`small`}
               type={`primary`}
               onClick={() => {
                 Modal.info({
+                  style: { top: 0 },
                   content: (
                     <Row justify={`center`} style={{ padding: `30px` }}>
                       <Col span={24}>
@@ -106,7 +210,7 @@ const List = () => {
                 type={`primary`}
                 icon={<EyeFilled />}
                 onClick={() => {
-                  Modal.info({ content: <>{x.observation}</> });
+                  Modal.info({ style: { top: 0 }, content: <>{x.observation}</> });
                 }}
               >
                 Ver observaciones
@@ -124,9 +228,9 @@ const List = () => {
       ),
     },
     {
-      width: `50%`,
+      width: 480,
       render: (x) => (
-        <Row>
+        <Row gutter={[8, 8]}>
           <Col span={24}>
             <Collapse size="small">
               <Collapse.Panel
@@ -267,6 +371,7 @@ const List = () => {
       ),
     },
     {
+      width: 220,
       render: (x) => (
         <Row justify={"space-between"}>
           <Col span={24} style={{ marginBottom: `5px` }}>
@@ -297,6 +402,26 @@ const List = () => {
               icon={<EditFilled />}
             >
               Editar
+            </Button>
+          </Col>
+          <Col span={24} style={{ marginBottom: `5px` }}>
+            <Button
+              shape="square"
+              type="default"
+              size="small"
+              block
+              icon={<EyeFilled />}
+              onClick={() => {
+                Modal.info({
+                  title: `Vista previa`,
+                  width: 900,
+                  style: { top: 0 },
+                  content: renderOrderPreview(x),
+                  onOk() {},
+                });
+              }}
+            >
+              Vista Previa
             </Button>
           </Col>
         </Row>
@@ -404,6 +529,8 @@ const List = () => {
       dataSource={state.list.results}
       size="small"
       bordered
+      scroll={{ x: true }}
+      tableLayout="fixed"
       rowKey={(x) => x.id}
       pagination={{
         total: state.list.count,

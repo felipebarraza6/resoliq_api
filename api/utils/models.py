@@ -5,7 +5,7 @@ from django.db import models
 
 
 class ModelApi(models.Model):
-    
+
     created = models.DateTimeField(
         'created at',
         auto_now_add=True,
@@ -20,5 +20,5 @@ class ModelApi(models.Model):
 
 
     class Meta:
-        abstract = True,
+        abstract = True
         ordering = ['-created', '-modified']

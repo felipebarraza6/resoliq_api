@@ -7,3 +7,4 @@ django-cors-headers
 django-filter
 requests
 django-import-export
+drf-excel
