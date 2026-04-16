@@ -66,6 +66,11 @@ const List = () => {
       measure: r.residue.type_medition,
     }));
     const total = order.registers.reduce((acc, r) => acc + r.quantity, 0);
+    const typeTag = order.movement === "OUT"
+      ? { label: "Retiro", color: "red" }
+      : order.is_reposition
+        ? { label: "Reposición", color: "geekblue" }
+        : { label: "Normal", color: "green" };
     return (
       <div style={{ paddingTop: 8 }}>
         <Row align="middle" justify="space-between" gutter={[16, 16]}>
@@ -83,45 +88,77 @@ const List = () => {
         <Divider style={{ margin: "12px 0" }} />
         <Row gutter={[16, 16]}>
           <Col xs={24} md={12}>
-            <Descriptions size="small" column={1} title="Cliente" bordered>
-              <Descriptions.Item label="Nombre">
-                {order.client.name}
-              </Descriptions.Item>
-              <Descriptions.Item label="RUT">
-                {order.client.dni}
-              </Descriptions.Item>
-              <Descriptions.Item label="Teléfono">
-                {order.client.phone_number}
-              </Descriptions.Item>
-              <Descriptions.Item label="Dirección">
-                {order.client.address}
-              </Descriptions.Item>
-              <Descriptions.Item label="Tipo">
-                {order.is_reposition ? "Reposición" : "Normal"}
-              </Descriptions.Item>
-            </Descriptions>
+            {order.client ? (
+              <Descriptions size="small" column={1} title="Cliente" bordered>
+                <Descriptions.Item label="Nombre">
+                  {order.client.name}
+                </Descriptions.Item>
+                <Descriptions.Item label="RUT">
+                  {order.client.dni}
+                </Descriptions.Item>
+                <Descriptions.Item label="Teléfono">
+                  {order.client.phone_number}
+                </Descriptions.Item>
+                <Descriptions.Item label="Dirección">
+                  {order.client.address}
+                </Descriptions.Item>
+                <Descriptions.Item label="Tipo">
+                  {order.is_reposition ? "Reposición" : "Normal"}
+                </Descriptions.Item>
+              </Descriptions>
+            ) : (
+              <Descriptions size="small" column={1} title="Usuario" bordered>
+                <Descriptions.Item label="Email">
+                  {order.performed_by?.email || "Sin información"}
+                </Descriptions.Item>
+                <Descriptions.Item label="Nombre">
+                  {order.performed_by
+                    ? `${order.performed_by.first_name} ${order.performed_by.last_name}`
+                    : "Sin información"}
+                </Descriptions.Item>
+                <Descriptions.Item label="Rol">
+                  {order.performed_by?.type_user === "ADM"
+                    ? "Administrador"
+                    : order.performed_by?.type_user === "BDG"
+                      ? "Bodega"
+                      : "Sin información"}
+                </Descriptions.Item>
+              </Descriptions>
+            )}
           </Col>
           <Col xs={24} md={12}>
-            <Descriptions size="small" column={1} title="Conductor" bordered>
-              <Descriptions.Item label="Nombre">
-                {order.driver.name}
-              </Descriptions.Item>
-              <Descriptions.Item label="RUT">
-                {order.driver.dni}
-              </Descriptions.Item>
-              <Descriptions.Item label="Patente">
-                {order.driver.vehicle_plate}
-              </Descriptions.Item>
-              <Descriptions.Item label="Teléfono">
-                {order.driver.phone_number}
-              </Descriptions.Item>
-            </Descriptions>
+            {order.driver ? (
+              <Descriptions size="small" column={1} title="Conductor" bordered>
+                <Descriptions.Item label="Nombre">
+                  {order.driver.name}
+                </Descriptions.Item>
+                <Descriptions.Item label="RUT">
+                  {order.driver.dni}
+                </Descriptions.Item>
+                <Descriptions.Item label="Patente">
+                  {order.driver.vehicle_plate}
+                </Descriptions.Item>
+                <Descriptions.Item label="Teléfono">
+                  {order.driver.phone_number}
+                </Descriptions.Item>
+              </Descriptions>
+            ) : (
+              <Descriptions size="small" column={1} title="Detalle" bordered>
+                <Descriptions.Item label="Movimiento">
+                  {order.movement === "OUT" ? "Retiro" : "Ingreso"}
+                </Descriptions.Item>
+                <Descriptions.Item label="Tipo">
+                  {order.is_reposition ? "Reposición" : "Normal"}
+                </Descriptions.Item>
+              </Descriptions>
+            )}
           </Col>
         </Row>
         <Divider style={{ margin: "12px 0" }} />
         <Row justify="space-between" align="middle" style={{ marginBottom: 8 }}>
           <Col>
             <Tag color="blue">Orden #{order.id}</Tag>
+            <Tag color={typeTag.color}>{typeTag.label}</Tag>
           </Col>
           <Col>
             <Tag color="green">{order.date}</Tag>
@@ -171,34 +208,46 @@ const List = () => {
             <Tag color={`green-inverse`}>{x.date}</Tag>
           </Col>
           <Col>
-            Cliente:
-            <Button
-              size={`small`}
-              type={`primary`}
-              onClick={() => {
-                Modal.info({
-                  style: { top: 0 },
-                  content: (
-                    <Row justify={`center`} style={{ padding: `30px` }}>
-                      <Col span={24}>
-                        Nombre: <b>{x.client.name}</b>
-                      </Col>
-                      <Col span={24}>
-                        Rut: <b>{x.client.dni}</b>
-                      </Col>
-                      <Col span={24}>
-                        Dirección: <b>{x.client.address}</b>
-                      </Col>
-                      <Col span={24}>
-                        Telefono: <b>{x.client.phone}</b>
-                      </Col>
-                    </Row>
-                  ),
-                });
-              }}
-            >
-              {x.client.name}
-            </Button>
+            {x.client ? (
+              <>
+                Cliente:
+                <Button
+                  size={`small`}
+                  type={`primary`}
+                  onClick={() => {
+                    Modal.info({
+                      style: { top: 0 },
+                      content: (
+                        <Row justify={`center`} style={{ padding: `30px` }}>
+                          <Col span={24}>
+                            Nombre: <b>{x.client.name}</b>
+                          </Col>
+                          <Col span={24}>
+                            Rut: <b>{x.client.dni}</b>
+                          </Col>
+                          <Col span={24}>
+                            Dirección: <b>{x.client.address}</b>
+                          </Col>
+                          <Col span={24}>
+                            Telefono: <b>{x.client.phone}</b>
+                          </Col>
+                        </Row>
+                      ),
+                    });
+                  }}
+                >
+                  {x.client.name}
+                </Button>
+              </>
+            ) : (
+              <>
+                Interno:
+                <br />
+                <Tag color={`blue-inverse`}>
+                  {x.performed_by?.email || `ID ${x.performed_by}`}
+                </Tag>
+              </>
+            )}
           </Col>
 
           {x.observation && (
@@ -342,18 +391,30 @@ const List = () => {
               </Collapse.Panel>
             </Collapse>
           </Col>
-          <Col style={{ marginBottom: `3px` }}>
-            Conductor:
-            <br />
-            <Tag color={`purple-inverse`}>{x.driver.name}</Tag>
-          </Col>
-          <Col style={{ marginBottom: `3px` }}>
-            Patente:
-            <br />{" "}
-            <Tag color={`yellow-inverse`} style={{ color: `black` }}>
-              {x.driver.vehicle_plate}
-            </Tag>
-          </Col>
+          {x.driver ? (
+            <>
+              <Col style={{ marginBottom: `3px` }}>
+                Conductor:
+                <br />
+                <Tag color={`purple-inverse`}>{x.driver.name}</Tag>
+              </Col>
+              <Col style={{ marginBottom: `3px` }}>
+                Patente:
+                <br />{" "}
+                <Tag color={`yellow-inverse`} style={{ color: `black` }}>
+                  {x.driver.vehicle_plate}
+                </Tag>
+              </Col>
+            </>
+          ) : (
+            <Col style={{ marginBottom: `3px` }}>
+              Usuario:
+              <br />
+              <Tag color={`purple-inverse`}>
+                {x.performed_by?.email || `ID ${x.performed_by}`}
+              </Tag>
+            </Col>
+          )}
           <Col>
             <Button
               shape="square"
@@ -441,7 +502,12 @@ const List = () => {
     doc.text(`FECHA: ${order.date}`, 5, 33);
     // Add text box
     doc.setFontSize(12);
-    doc.text(`Cotización`, 200, 10, { align: "right" });
+    const title = order.movement === "OUT"
+      ? "Orden de Retiro"
+      : order.is_reposition
+        ? "Cotización de Reposición"
+        : "Cotización";
+    doc.text(title, 200, 10, { align: "right" });
     doc.setFontSize(10);
     doc.text(`${order.id}`, 200, 15, { align: "right" });
     doc.text(`76.365.199-1`, 200, 20, { align: "right" });
@@ -461,20 +527,43 @@ const List = () => {
 
     tableData.push(["Total", totalQuantity, ""]);
 
-    const tableClient1 = [order.client].map((x) => [
-      x.name,
-      x.dni,
-      x.phone_number,
-      x.address,
-      order.is_reposition ? "Reposición" : "Normal",
-    ]);
+    const clientType = order.movement === "OUT"
+      ? "Retiro"
+      : order.is_reposition
+        ? "Reposición"
+        : "Normal";
 
-    const tableDriver = [order.driver].map((x) => [
-      x.name,
-      x.dni,
-      x.vehicle_plate,
-      x.phone_number,
-    ]);
+    const tableClient1 = order.client
+      ? [order.client].map((x) => [
+          x.name,
+          x.dni,
+          x.phone_number,
+          x.address,
+          clientType,
+        ])
+      : [[
+          order.performed_by?.email || "Interno",
+          order.performed_by?.dni || "-",
+          order.performed_by?.phone_number || "-",
+          "-",
+          clientType,
+        ]];
+
+    const tableDriver = order.driver
+      ? [order.driver].map((x) => [
+          x.name,
+          x.dni,
+          x.vehicle_plate,
+          x.phone_number,
+        ])
+      : [[
+          order.performed_by
+            ? `${order.performed_by.first_name} ${order.performed_by.last_name}`
+            : "-",
+          order.performed_by?.dni || "-",
+          "-",
+          order.performed_by?.phone_number || "-",
+        ]];
 
     doc.setFontSize(14);
     doc.text(`Cliente`, 15, 50);
@@ -487,7 +576,7 @@ const List = () => {
 
     doc.setFontSize(12);
     doc.text(`Observación`, 15, 80);
-    doc.text(`${order.observation}`, 18, 87);
+    doc.text(`${order.observation || ""}`, 18, 87);
 
     doc.setFontSize(14);
     doc.text(`Conductor`, 15, 115);

@@ -36,6 +36,7 @@ const CreateUpdate = () => {
   const [clients, setClients] = useState([]);
   const [drivers, setDrivers] = useState([]);
   const [residues, setResidues] = useState([]);
+  const [users, setUsers] = useState([]);
   const [detailResiduals, setDetailResiduals] = useState([]);
   const [listPreSelect, setListPreSelect] = useState({});
 
@@ -58,7 +59,6 @@ const CreateUpdate = () => {
   async function createOrder(values) {
     setIsLoading(true);
     try {
-      let validatedList = [];
       const clonedDetailResiduals = detailResiduals.reduce((acc, cur) => {
         const existingResidual = acc.find(
           (residual) => residual.residue === cur.residue.id
@@ -69,21 +69,33 @@ const CreateUpdate = () => {
           acc.push({
             residue: cur.residue.id,
             quantity: cur.quantity,
-            quantity_res: parseInt(cur.residue.quantity + cur.quantity),
           });
         }
         return acc;
       }, []);
 
-      for (const detail of clonedDetailResiduals) {
-        const res = await api.register_residues.create(detail);
-        validatedList.push(res.id);
+      const movement = values.movement || "IN";
+      if (movement === "OUT") {
+        const insufficient = clonedDetailResiduals
+          .map((d) => {
+            const residue = residues.find((r) => r.id === d.residue);
+            const stock = residue ? Number(residue.quantity) : 0;
+            return stock < Number(d.quantity) ? residue?.name || "(sin nombre)" : null;
+          })
+          .filter(Boolean);
+        if (insufficient.length) {
+          Modal.error({
+            title: "Stock insuficiente",
+            content: `No hay stock suficiente para: ${insufficient.join(", ")}`,
+          });
+          return;
+        }
       }
 
       values = {
         ...values,
         date: values.date.format("YYYY-MM-DD"),
-        registers: validatedList,
+        items: clonedDetailResiduals,
       };
       
       await api.orders.create(values);
@@ -92,14 +104,6 @@ const CreateUpdate = () => {
         type: "update_list",
       });
       form.resetFields();
-      
-      await Promise.all(
-        clonedDetailResiduals.map(async (register) => {
-          await api.residues.update(register.residue, {
-            quantity: register.quantity_res,
-          });
-        })
-      );
       
       setListPreSelect({});
       setDetailResiduals([]);
@@ -126,31 +130,9 @@ const CreateUpdate = () => {
   async function updateOrder(values) {
     setIsLoading(true);
     try {
-      let validatedList = [];
-      const clonedDetailResiduals = detailResiduals.reduce((acc, cur) => {
-        const existingResidual = acc.find(
-          (residual) => residual.residue.residual === cur.residue.id
-        );
-        if (existingResidual) {
-          existingResidual.residue.quantity += cur.quantity;
-        } else {
-          acc.push({
-            residue: cur.residue.id,
-            quantity: cur.quantity,
-          });
-        }
-        return acc;
-      }, []);
-
-      for (const detail of clonedDetailResiduals) {
-        const res = await api.register_residues.create(detail);
-        validatedList.push(res.id);
-      }
-
       values = {
         ...values,
         date: values.date.format("YYYY-MM-DD"),
-        registers: validatedList,
       };
       
       await api.orders.update(state.select_to_edit.id, values);
@@ -230,19 +212,36 @@ const CreateUpdate = () => {
     setResidues(allData);
   };
 
+  const getUsers = async () => {
+    let currentPage = 1;
+    let allData = [];
+    let response = await api.users.list(currentPage);
+    allData = [...response.results];
+    while (response.next) {
+      currentPage++;
+      response = await api.users.list(currentPage);
+      allData = [...allData, ...response.results];
+    }
+    setUsers(allData);
+  };
+
   useEffect(() => {
     getClient();
     getDrivers();
     getResidues();
+    getUsers();
     if (state.select_to_edit) {
       form.setFieldsValue(state.select_to_edit);
       form.setFieldValue("date", dayjs(state.select_to_edit.date));
-      form.setFieldValue("client", state.select_to_edit.client.id);
-      form.setFieldValue("driver", state.select_to_edit.driver.id);
+      form.setFieldValue("client", state.select_to_edit.client?.id);
+      form.setFieldValue("driver", state.select_to_edit.driver?.id);
       form.setFieldValue("is_reposition", state.select_to_edit.is_reposition);
+      form.setFieldValue("movement", state.select_to_edit.movement || "IN");
+      form.setFieldValue("performed_by", state.select_to_edit.performed_by?.id || state.select_to_edit.performed_by);
       setDetailResiduals(state.select_to_edit.registers);
     } else {
       form.setFieldValue("is_reposition", false);
+      form.setFieldValue("movement", "IN");
     }
   }, [state.select_to_edit]);
 
@@ -271,37 +270,101 @@ const CreateUpdate = () => {
             format="YYYY-MM-DD"
           />
         </Form.Item>
+        <Form.Item shouldUpdate noStyle>
+          {() => {
+            const movement = form.getFieldValue("movement") || "IN";
+            const isReposition = form.getFieldValue("is_reposition") === true;
+            const requireClientDriver = movement === "IN" && !isReposition;
+            return (
+              <>
+                <Form.Item
+                  label="Cliente"
+                  name="client"
+                  rules={[{ required: requireClientDriver, message: "Selecciona un cliente" }]}
+                >
+                  <Select
+                    placeholder={`Selecciona un cliente`}
+                    style={{ width: `100%` }}
+                    allowClear
+                    disabled={!requireClientDriver}
+                  >
+                    {clients.map((client) => (
+                      <Select.Option key={client.id} value={client.id}>
+                        {client.name}({client.dni})
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  label="Conductor"
+                  name="driver"
+                  rules={[{ required: requireClientDriver, message: "Selecciona un conductor" }]}
+                >
+                  <Select
+                    placeholder={`Selecciona un conductor`}
+                    style={{ width: `100%` }}
+                    allowClear
+                    disabled={!requireClientDriver}
+                  >
+                    {drivers.map((driver) => (
+                      <Select.Option key={driver.id} value={driver.id}>
+                        {driver.name} - {driver.vehicle_plate}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </>
+            );
+          }}
+        </Form.Item>
+
         <Form.Item
-          label="Cliente"
-          name="client"
-          rules={[{ required: true, message: "Selecciona un cliente" }]}
+          label="Movimiento"
+          name="movement"
+          rules={[{ required: true, message: "Selecciona un movimiento" }]}
         >
           <Select
-            placeholder={`Selecciona un cliente`}
+            placeholder={`Selecciona un movimiento`}
             style={{ width: `100%` }}
+            onChange={(v) => {
+              if (v === "OUT") {
+                form.setFieldValue("is_reposition", false);
+                form.setFieldValue("client", null);
+                form.setFieldValue("driver", null);
+              }
+            }}
           >
-            {clients.map((client) => (
-              <Select.Option key={client.id} value={client.id}>
-                {client.name}({client.dni})
-              </Select.Option>
-            ))}
+            <Select.Option key={`IN`} value={"IN"}>
+              Agregar (Ingreso)
+            </Select.Option>
+            <Select.Option key={`OUT`} value={"OUT"}>
+              Retirar
+            </Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item
-          label="Conductor"
-          name="driver"
-          rules={[{ required: true, message: "Selecciona un conductor" }]}
-        >
-          <Select
-            placeholder={`Selecciona un conductor`}
-            style={{ width: `100%` }}
-          >
-            {drivers.map((driver) => (
-              <Select.Option key={driver.id} value={driver.id}>
-                {driver.name} - {driver.vehicle_plate}
-              </Select.Option>
-            ))}
-          </Select>
+
+        <Form.Item shouldUpdate noStyle>
+          {() => {
+            const movement = form.getFieldValue("movement") || "IN";
+            const isReposition = form.getFieldValue("is_reposition") === true;
+            const needsUser = movement === "OUT" || isReposition;
+            if (!needsUser) return null;
+            return (
+              <Form.Item
+                label="Usuario"
+                name="performed_by"
+                rules={[{ required: true, message: "Selecciona un usuario" }]}
+              >
+                <Select placeholder={`Selecciona un usuario`} style={{ width: `100%` }}>
+                  {users.map((u) => (
+                    <Select.Option key={u.id} value={u.id}>
+                      {u.first_name} {u.last_name} ({u.email})
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            );
+          }}
         </Form.Item>
         <hr />
 
@@ -428,6 +491,13 @@ const CreateUpdate = () => {
           <Select
             placeholder={`Selecciona una opcion`}
             style={{ width: `100%` }}
+            onChange={(v) => {
+              if (v === true) {
+                form.setFieldValue("movement", "IN");
+                form.setFieldValue("client", null);
+                form.setFieldValue("driver", null);
+              }
+            }}
           >
             <Select.Option key={`1`} value={true}>
               SI

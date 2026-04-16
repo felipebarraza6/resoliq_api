@@ -2,8 +2,14 @@ import axiosImport from "axios";
 
 const axios = axiosImport?.default || axiosImport;
 
-const BASE_URL = "http://localhost:8000/api/";
-//const BASE_URL = "http://137.184.152.245:8001/api/";
+const getDefaultBaseUrl = () => {
+  if (typeof window !== "undefined" && window.location?.hostname === "localhost") {
+    return "http://localhost:8000/api/";
+  }
+  return "http://137.184.152.245:8001/api/";
+};
+
+const BASE_URL = process.env.REACT_APP_API_URL || getDefaultBaseUrl();
 
 export const Axios = axios.create({
   baseURL: BASE_URL,

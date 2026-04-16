@@ -118,6 +118,8 @@ class Command(BaseCommand):
             date=today,
             client=clients[0],
             driver=drivers[0],
+            movement=Order.MOVEMENT_IN,
+            performed_by=admin_user,
             is_reposition=False,
             observation="Ruta AM",
         )
@@ -127,10 +129,18 @@ class Command(BaseCommand):
             date=today,
             client=clients[1],
             driver=drivers[1],
+            movement=Order.MOVEMENT_IN,
+            performed_by=warehouse_user,
             is_reposition=True,
             observation="Ruta PM",
         )
         order_2.registers.add(register_3)
+
+        residues[0].quantity = 120
+        residues[2].quantity = 350
+        residues[3].quantity = 200
+        for r in (residues[0], residues[2], residues[3]):
+            r.save(update_fields=["quantity"])
 
         self.stdout.write(self.style.SUCCESS("Seed demo completado."))
         self.stdout.write(f"admin: {admin_user.email} / Admin1234!  token: {admin_token}")
@@ -215,4 +225,3 @@ class Command(BaseCommand):
             defaults={"type_medition": type_medition, "quantity": quantity},
         )
         return residue
-
