@@ -3,9 +3,11 @@ from rest_framework import viewsets, mixins, permissions
 from api.resoliq.models import Residue, RegisterResidue
 from api.resoliq.serializers import ResidueSerializer, RegisterResidueSerializer, ResidueListSerializer
 from django_filters import rest_framework as filters
+from api.utils.viewsets import AllRecordsMixin
 
 
-class ResidueViewSet(viewsets.GenericViewSet,
+class ResidueViewSet(AllRecordsMixin,
+                     viewsets.GenericViewSet,
                      mixins.RetrieveModelMixin,
                      mixins.ListModelMixin,
                      mixins.CreateModelMixin,
@@ -24,7 +26,8 @@ class ResidueViewSet(viewsets.GenericViewSet,
             return ResidueSerializer
 
 
-class RegisterResidueViewSet(viewsets.GenericViewSet,
+class RegisterResidueViewSet(AllRecordsMixin,
+                             viewsets.GenericViewSet,
                              mixins.RetrieveModelMixin,
                              mixins.ListModelMixin,
                              mixins.CreateModelMixin,

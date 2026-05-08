@@ -3,9 +3,11 @@ from rest_framework import viewsets, mixins, permissions
 from api.resoliq.models import Client
 from api.resoliq.serializers import ClientSerializer
 from django_filters import rest_framework as filters
+from api.utils.viewsets import AllRecordsMixin
 
 
-class ClientViewSet(viewsets.GenericViewSet,
+class ClientViewSet(AllRecordsMixin,
+                    viewsets.GenericViewSet,
                     mixins.RetrieveModelMixin,
                     mixins.ListModelMixin,
                     mixins.CreateModelMixin,

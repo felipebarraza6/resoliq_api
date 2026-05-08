@@ -15,19 +15,20 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Add python requirements file.
-COPY requirements.txt /code/
+COPY api/requirements.txt /code/
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
-COPY . /code/
+# Copy project code (preserving the 'api' Python package)
+COPY api /code/api
+COPY manage.py /code/
 
 # Create directories for static and media files
 RUN mkdir -p /code/static /code/media
 
 # Copy entrypoint script
-COPY entrypoint.sh /code/
+COPY api/entrypoint.sh /code/
 RUN chmod +x /code/entrypoint.sh
 
 # Expose port

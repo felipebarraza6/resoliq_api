@@ -12,6 +12,7 @@ const DriversTruck = () => {
       results: [],
       count: 0,
       page: 1,
+      pageSize: 10,
       countUpdate: 0,
     },
     select_to_edit: null,

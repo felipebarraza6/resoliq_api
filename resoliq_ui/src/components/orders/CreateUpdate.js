@@ -43,17 +43,13 @@ const CreateUpdate = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   function createOrClear() {
-    if (state.select_to_edit) {
-      dispatch({
-        type: "select_to_edit",
-        payload: { driver: null },
-      });
-      setListPreSelect({});
-      setDetailResiduals([]);
-      form.resetFields();
-    } else {
-      form.resetFields();
-    }
+    form.resetFields();
+    setListPreSelect({});
+    setDetailResiduals([]);
+    dispatch({
+      type: "select_to_edit",
+      payload: { order: null },
+    });
   }
 
   async function createOrder(values) {
@@ -174,55 +170,23 @@ const CreateUpdate = () => {
   }
 
   const getClient = async () => {
-    let currentPage = 1;
-    let allData = [];
-    let response = await api.clients.list(currentPage);
-    allData = [...response.results];
-    while (response.next) {
-      currentPage++;
-      response = await api.clients.list(currentPage);
-      allData = [...allData, ...response.results];
-    }
-    setClients(allData);
+    const data = await api.clients.all();
+    setClients(data);
   };
 
   const getDrivers = async () => {
-    let currentPage = 1;
-    let allData = [];
-    let response = await api.drivers.list(currentPage);
-    allData = [...response.results];
-    while (response.next) {
-      currentPage++;
-      response = await api.drivers.list(currentPage);
-      allData = [...allData, ...response.results];
-    }
-    setDrivers(allData);
+    const data = await api.drivers.all();
+    setDrivers(data);
   };
 
   const getResidues = async () => {
-    let currentPage = 1;
-    let allData = [];
-    let response = await api.residues.list(currentPage);
-    allData = [...response.results];
-    while (response.next) {
-      currentPage++;
-      response = await api.residues.list(currentPage);
-      allData = [...allData, ...response.results];
-    }
-    setResidues(allData);
+    const data = await api.residues.all();
+    setResidues(data);
   };
 
   const getUsers = async () => {
-    let currentPage = 1;
-    let allData = [];
-    let response = await api.users.list(currentPage);
-    allData = [...response.results];
-    while (response.next) {
-      currentPage++;
-      response = await api.users.list(currentPage);
-      allData = [...allData, ...response.results];
-    }
-    setUsers(allData);
+    const data = await api.users.all();
+    setUsers(data);
   };
 
   useEffect(() => {
@@ -242,6 +206,8 @@ const CreateUpdate = () => {
     } else {
       form.setFieldValue("is_reposition", false);
       form.setFieldValue("movement", "IN");
+      setDetailResiduals([]);
+      setListPreSelect({});
     }
   }, [state.select_to_edit]);
 
@@ -395,16 +361,16 @@ const CreateUpdate = () => {
               ))}
             </Select>
             <Input
-              type={`number`}
-              placeholder="0"
+              type="number"
+              placeholder="Cantidad"
               size="small"
               style={{ width: `70px`, height: `26px` }}
-              defaultValue={listPreSelect.quantity ? listPreSelect.quantity : 0}
-              value={listPreSelect.quantity ? listPreSelect.quantity : 0}
+              value={listPreSelect.quantity || ""}
               onChange={(e) => {
+                const val = e.target.value;
                 setListPreSelect({
                   ...listPreSelect,
-                  quantity: parseInt(e.target.value),
+                  quantity: val === "" ? "" : parseInt(val, 10),
                 });
               }}
             />
@@ -415,8 +381,9 @@ const CreateUpdate = () => {
               onClick={() => {
                 if (
                   !listPreSelect.residue ||
-                  listPreSelect.quantity === 0 ||
-                  !listPreSelect.quantity
+                  listPreSelect.quantity === "" ||
+                  isNaN(listPreSelect.quantity) ||
+                  Number(listPreSelect.quantity) <= 0
                 ) {
                   notification.error({
                     message: "Error al agregar residuo",

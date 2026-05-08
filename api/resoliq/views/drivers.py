@@ -3,9 +3,11 @@ from rest_framework import viewsets, mixins, permissions
 from api.resoliq.models import Driver
 from api.resoliq.serializers import DriverSerializer
 from django_filters import rest_framework as filters
+from api.utils.viewsets import AllRecordsMixin
 
 
-class DriverViewSet(viewsets.GenericViewSet,
+class DriverViewSet(AllRecordsMixin,
+                    viewsets.GenericViewSet,
                     mixins.RetrieveModelMixin,
                     mixins.ListModelMixin,
                     mixins.CreateModelMixin,

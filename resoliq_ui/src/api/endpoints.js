@@ -10,8 +10,13 @@ export const get_profile = async (user) => {
   return response.data;
 };
 
-export const users_list = async (page) => {
-  const response = await GET(`auth/users/?page=${page}`);
+export const users_list = async (page = 1, pageSize = 10) => {
+  const response = await GET(`auth/users/?page=${page}&page_size=${pageSize}`);
+  return response.data;
+};
+
+export const users_all = async () => {
+  const response = await GET(`auth/users/all/`);
   return response.data;
 };
 
@@ -40,8 +45,13 @@ export const create_residue = async (data) => {
   return response;
 };
 
-export const list_residues = async (page) => {
-  const response = await GET(`residues/?page=${page}`);
+export const list_residues = async (page = 1, pageSize = 10) => {
+  const response = await GET(`residues/?page=${page}&page_size=${pageSize}`);
+  return response.data;
+};
+
+export const list_all_residues = async () => {
+  const response = await GET(`residues/all/`);
   return response.data;
 };
 
@@ -60,8 +70,13 @@ export const create_driver = async (data) => {
   return response;
 };
 
-export const list_drivers = async () => {
-  const response = await GET("drivers/");
+export const list_drivers = async (page = 1, pageSize = 10) => {
+  const response = await GET(`drivers/?page=${page}&page_size=${pageSize}`);
+  return response.data;
+};
+
+export const list_all_drivers = async () => {
+  const response = await GET(`drivers/all/`);
   return response.data;
 };
 
@@ -75,8 +90,13 @@ export const delete_driver = async (id) => {
   return response;
 };
 
-export const list_clients = async (page) => {
-  const response = await GET(`clients/?page=${page}`);
+export const list_clients = async (page = 1, pageSize = 10) => {
+  const response = await GET(`clients/?page=${page}&page_size=${pageSize}`);
+  return response.data;
+};
+
+export const list_all_clients = async () => {
+  const response = await GET(`clients/all/`);
   return response.data;
 };
 
@@ -93,9 +113,9 @@ export const delete_client = async (id) => {
   return response;
 };
 
-export const list_register_residues = async () => {
-  const response = await GET("register-residues/");
-  return response;
+export const list_register_residues = async (page = 1, pageSize = 10) => {
+  const response = await GET(`register-residues/?page=${page}&page_size=${pageSize}`);
+  return response.data;
 };
 
 export const create_register_residue = async (data) => {
@@ -111,8 +131,8 @@ export const delete_register_residue = async (id) => {
   return response;
 };
 
-export const list_orders = async (page) => {
-  const response = await GET(`orders/?page=${page}`);
+export const list_orders = async (page = 1, pageSize = 10) => {
+  const response = await GET(`orders/?page=${page}&page_size=${pageSize}`);
   return response.data;
 };
 
@@ -133,6 +153,7 @@ const api = {
   authenticated: { login: login, get_profile: get_profile },
   users: {
     list: users_list,
+    all: users_all,
     create: create_user,
     update: update_user,
     delete: delete_user,
@@ -140,18 +161,21 @@ const api = {
   },
   residues: {
     list: list_residues,
+    all: list_all_residues,
     create: create_residue,
     update: update_residue,
     delete: delete_residue,
   },
   clients: {
     list: list_clients,
+    all: list_all_clients,
     create: create_client,
     update: update_client,
     delete: delete_client,
   },
   drivers: {
     list: list_drivers,
+    all: list_all_drivers,
     create: create_driver,
     update: update_driver,
     delete: delete_driver,

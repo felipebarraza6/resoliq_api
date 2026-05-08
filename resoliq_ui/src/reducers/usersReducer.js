@@ -34,6 +34,16 @@ export const usersReducer = (state, action) => {
         },
       };
 
+    case "change_page_size":
+      return {
+        ...state,
+        list: {
+          ...state.list,
+          page: 1,
+          pageSize: action.pageSize,
+        },
+      };
+
     case "set_drawer_visible":
       return {
         ...state,

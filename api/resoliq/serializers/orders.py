@@ -87,9 +87,15 @@ class OrderSerializer(serializers.ModelSerializer):
             residue.save(update_fields=["quantity"])
 
         prefix = "Retiro" if movement == Order.MOVEMENT_OUT else ("Reposición" if is_reposition else "Ingreso")
+        order_obs = order.observation or ""
         for rr in register_items:
             base = f"{prefix} Orden #{order.id}."
-            rr.observation = f"{base} {rr.observation}".strip() if rr.observation else base
+            parts = [base]
+            if order_obs:
+                parts.append(order_obs)
+            if rr.observation:
+                parts.append(rr.observation)
+            rr.observation = " ".join(parts)
             rr.save(update_fields=["observation"])
 
     @transaction.atomic

@@ -1,4 +1,4 @@
-# Dockerfile para desarrollo con PostgreSQL
+# Dockerfile para desarrollo
 FROM python:3.11-slim
 
 # Set environment variables
@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Add python requirements file.
-COPY requirements.txt /code/
+COPY api/requirements.txt /code/
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
@@ -23,5 +23,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Expose port
 EXPOSE 8000
 
-# Comando por defecto para desarrollo
+# Comando por defecto para desarrollo (puede ser sobrescrito por docker-compose)
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -13,7 +13,7 @@ const List = () => {
   const { state, dispatch } = useContext(DriversContext);
 
   async function getDrivers() {
-    await api.drivers.list(state.list.page).then((x) => {
+    await api.drivers.list(state.list.page, state.list.pageSize).then((x) => {
       dispatch({
         type: "add_drivers",
         payload: x,
@@ -43,28 +43,7 @@ const List = () => {
   };
 
   const downloadDataToExcel = async () => {
-    const pageSize = 10; // Número de elementos por página
-    let currentPage = 1; // Página actual
-    let allData = []; // Array para almacenar todos los datos
-
-    // Función para obtener los datos de una página específica
-    const getDataPage = async (page) => {
-      const rq = await api.drivers.list(page);
-      return rq.results;
-    };
-
-    // Obtener los datos de la primera página
-    let pageData = await getDataPage(currentPage);
-    allData = allData.concat(pageData);
-
-    // Obtener los datos de las páginas restantes
-    while (pageData.length === pageSize) {
-      currentPage++;
-      pageData = await getDataPage(currentPage);
-      allData = allData.concat(pageData);
-    }
-
-    // Dividir los datos en lotes más pequeños
+    const allData = await api.drivers.all();
 
     const filteredData = allData.map((item) => ({
       Nombre: item.name,
@@ -178,7 +157,7 @@ const List = () => {
 
   useEffect(() => {
     getDrivers();
-  }, [state.list.countUpdate, state.list.page]);
+  }, [state.list.countUpdate, state.list.page, state.list.pageSize]);
 
   return (
     <Table
@@ -206,6 +185,10 @@ const List = () => {
       rowKey={(x) => x.id}
       pagination={{
         total: state.list.count,
+        pageSize: state.list.pageSize,
+        showSizeChanger: true,
+        pageSizeOptions: ['10', '20', '50', '100'],
+        onShowSizeChange: (current, size) => dispatch({ type: "change_page_size", pageSize: size }),
         onChange: (page) => dispatch({ type: "change_page", page: page }),
       }}
       columns={columns}

@@ -23,8 +23,11 @@ from api.users.models import User
 # Serializers
 from api.users.serializers import ResetPasswordSerializer, UserResponseSerializer, UserLoginSerializer, UserModelSerializer, UserSignUpSerializer
 
+from api.utils.viewsets import AllRecordsMixin
 
-class UserViewSet(mixins.RetrieveModelMixin,
+
+class UserViewSet(AllRecordsMixin,
+                  mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,
                   mixins.CreateModelMixin,
                   mixins.ListModelMixin,

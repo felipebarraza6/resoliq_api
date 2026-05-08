@@ -1,9 +1,16 @@
+# Docker Compose para DESARROLLO LOCAL
+# Uso: docker compose -f docker-compose.dev.yml up --build
+#
+# Este archivo levanta solo la API Django con recarga automática.
+# Usa SQLite por defecto (no requiere PostgreSQL).
+
 services:
   api:
     build:
-      context: ./api
-      dockerfile: Dockerfile.dev
-    image: api-dev
+      context: .
+      dockerfile: api/Dockerfile.dev
+    image: resoliq-api-dev
+    container_name: resoliq-api-dev
     volumes:
       - .:/code
       - ./db.sqlite3:/code/db.sqlite3
@@ -17,11 +24,3 @@ services:
     command: >
       sh -c "python manage.py migrate --noinput &&
              python manage.py runserver 0.0.0.0:8000"
-
-  #react:
-  #  build: ./resoliq_ui
-  #  image: ui
-  #  ports:
-  #    - "4200:80"
-  #  depends_on:
-  #    - api

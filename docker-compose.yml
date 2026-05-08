@@ -1,8 +1,14 @@
-version: "3.8"
+# Docker Compose para PRODUCCIÓN
+# Uso: docker compose up --build -d
+#
+# Este archivo levanta la API lista para producción con Gunicorn.
+# Asegúrate de definir las variables de entorno en un archivo .env
 
 services:
   api:
-    build: ./api
+    build:
+      context: .
+      dockerfile: api/Dockerfile
     image: resoliq-api
     container_name: resoliq-api
     restart: unless-stopped

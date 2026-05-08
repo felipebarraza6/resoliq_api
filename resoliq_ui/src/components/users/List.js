@@ -10,7 +10,7 @@ const List = () => {
   const { state, dispatch } = useContext(UsersContext);
 
   async function getUsers() {
-    await api.users.list(state.list.page).then((x) => {
+    await api.users.list(state.list.page, state.list.pageSize).then((x) => {
       dispatch({
         type: "add_users",
         payload: x,
@@ -112,7 +112,7 @@ const List = () => {
 
   useEffect(() => {
     getUsers();
-  }, [state.list.countUpdate, state.list.page]);
+  }, [state.list.countUpdate, state.list.page, state.list.pageSize]);
 
   return (
     <Table
@@ -124,6 +124,10 @@ const List = () => {
       rowKey={(x) => x.id}
       pagination={{
         total: state.list.count,
+        pageSize: state.list.pageSize,
+        showSizeChanger: true,
+        pageSizeOptions: ['10', '20', '50', '100'],
+        onShowSizeChange: (current, size) => dispatch({ type: "change_page_size", pageSize: size }),
         onChange: (page) => dispatch({ type: "change_page", page: page }),
       }}
       columns={columns}
